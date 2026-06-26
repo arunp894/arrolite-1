@@ -1,0 +1,51 @@
+{% load custom_tags %}
+{% get_sidebar_menu as sidebar_menu %}
+{% current_url_name as current_url %}
+  
+ 
+
+      <div id="sidebar"  class="nav-collapse ">
+        <!-- sidebar menu start-->
+            <ul class="sidebar-menu" id="nav-accordion">
+         
+      
+                {% regroup sidebar_menu  by parent as menu_groups %}
+                
+                {% for group in menu_groups %}
+                
+                {% if group.grouper %}
+                    <!-- Sub Menu -->
+                    <li class="sub-menu {% if group.list|menu_is_active:current_url %}active dcjq-current-parent{% endif %}">
+                    <a href="javascript:;" class="{% if group.list|menu_is_active:current_url %}active{% endif %}">
+                        <i class="{{group.list.0.icon}}"></i>
+                        <span>{{ group.grouper }}</span>
+                    </a>
+                    <ul class="sub">
+                        {% for item in group.list %}
+                        {% if not item.permission_only %}
+                            {% if not item.perm or request.user|has_perm:item.perm %}
+                            <li class="{% if item.url == current_url %}active{% endif %}"><a href="{% url item.url %}" class="{% if item.url == current_url %}active{% endif %}"> {{ item.name }}</a></li>
+                            {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                    </li>
+                {% else %}
+                    <!-- Top-level items -->
+                    {% for item in group.list %}
+                    {% if not item.permission_only %}
+                        {% if not item.perm or request.user|has_perm:item.perm %}
+                        <li class="{% if item.url == current_url %}active{% endif %}">
+                            <a href="{% url item.url %}" class="{% if item.url == current_url %}active{% endif %}">
+                            <i class="{{ item.icon }}"></i>
+                            <span>{{ item.name }}</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </ul>
+        <!-- sidebar menu end-->
+    </div>

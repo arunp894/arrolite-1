@@ -1,0 +1,211 @@
+
+{% extends 'base/container.html' %}
+{% load static %}
+{% block title %}Sample-Page {% endblock %}
+
+{% block style %}
+<style>
+    .content {
+       min-height: 452px!important;
+    }
+</style>
+{% endblock %}
+{% block body_content %} 
+ <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.steps.css'%}" />  
+<div class="wrapper">
+    <div class="wrapper-title">
+    <div class="wrapper-content">User data</div>
+    <div class="wrapper-actions">
+       
+        <button class="btn btn-secondary" style="display: inline-flex;gap:2px;" onclick="history.back()">  <i class="material-icons">arrow_circle_left</i>  Back</button>
+    </div>
+        </div>
+     <div class="row">
+        <div class="col-lg-12">
+            <!--progress bar start-->
+            <section class="card">
+                <header class="card-header">
+                    Register Form 
+                </header>
+                <div class="card-body">
+                
+                <form id="wizard-validation-form" action="{{ form_action }}"  method="POST" enctype="multipart/form-data">
+
+                {% csrf_token %}
+                        <div>
+                            <h3>Step 1</h3>
+                            <section>
+                                <div class="form-group clearfix">
+                                    <label class="col-lg-2 control-label " for="first_name">First name<span style="color: red;">*</span>  </label>
+                                    <div class="col-lg-10">
+                                        <input class="form-control" id="first_name" name="first_name" type="text" value="{{ form.first_name.value|default_if_none:'' }}">
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-lg-2 control-label " for="last_name">Last name <span style="color: red;">*</span></label>
+                                    <div class="col-lg-10">
+                                        <input id="last_name" name="last_name" type="text" value="{{ form.last_name.value|default_if_none:'' }}" class="required form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix">
+                                    <label class="col-lg-2 control-label" for="email">Email<span style="color: red;">*</span></label>
+                                    <div class="col-lg-10">
+                                        <input id="email" name="email" type="text" class="required form-control" value="{{ form.email.value|default_if_none:'' }}">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-lg-2 control-label" for="password">Password</label>
+                                    <div class="col-lg-10">
+                                        <input id="password" name="password" type="password"  class=" form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-lg-2 control-label" for="conform_password"> confirm Password</label>
+                                    <div class="col-lg-10">
+                                        <input id="password" name="confirm_password" type="password"  class=" form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-lg-12 control-label ">(<span style="color: red;">*</span>) Mandatory</label>
+                                </div>
+                            </section>
+                            <h3>Step 2</h3>
+                            <section>
+                                <div class="form-group clearfix">
+                                    <label class="col-lg-2 control-label" for="phone_number">Mobile<span style="color: red;">*</span></label>
+                                    <div class="col-lg-10">
+                                        <input id="phone_number" name="phone_number" type="text" class="required form-control" value="{{ form.phone_number.value|default_if_none:'' }}">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-lg-2 control-label" for="blood_group"> Blood Group *</label>
+                                    <div class="col-lg-10">
+                                        <input id="blood_group" name="blood_group" type="text" class="required form-control" value= "{{ form.blood_group.value|default_if_none:'' }}">
+                                    </div>
+                                </div>
+                             
+                                 <div class="form-group">
+                                     <label class="col-lg-2 control-label" for="Designation"> Designation *</label>
+                                 <div class="col-lg-10">
+                                      {{ form.groups }}</div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-lg-2 control-label " for="address">Address </label>
+                                    <div class="col-lg-10">
+                                        <input id="address" name="address" type="text" class="form-control" value= "{{ form.address.value|default_if_none:'' }}">
+                                    </div>
+                                </div>
+                             <div class="form-group clearfix">
+                            <label class="col-lg-2 control-label" for="gender">Gender</label>
+                            <div class="col-lg-10">
+                                <select id="gender" name="gender" class="form-control">
+                                    <option value="">-- Select Gender --</option>
+                                    <option value="male" {% if form.gender.value == "male" %}selected{% endif %}>Male</option>
+                                    <option value="female" {% if form.gender.value == "female" %}selected{% endif %}>Female</option>
+                                    <option value="other" {% if form.gender.value == "other" %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                                
+
+                                <div class="form-group clearfix">
+                                    <label class="col-lg-12 control-label ">(<span style="color: red;">*</span>) Mandatory</label>
+                                </div>
+
+                            </section>
+                            <h3>Step 3</h3>
+                            <section>
+                                <div class="form-group clearfix">
+                                    <div class="col-lg-12" id="display-current-datas">
+                                        <ul class="list-unstyled w-list">
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                            </section>
+                          
+                            
+                        </div>
+                        
+                    </form>
+                   
+                </div>
+            </section>
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+  <script src="{% static 'js/jquery.stepy.js'%}"></script>
+    <script src="{% static 'js/jquery.steps.min.js'%}" type="text/javascript"></script>
+     <script src="{% static 'js/jquery.validate.min.js'%}" type="text/javascript"></script>
+  <script type="text/javascript">
+      $(document).ready(function () {
+      
+          var form = $("#wizard-validation-form");
+          
+          form.validate({
+              errorPlacement: function errorPlacement(error, element) {
+                  element.after(error);
+              }
+          });
+          form.children("div").steps({
+              headerTag: "h3",
+              bodyTag: "section",
+              transitionEffect: "slideLeft",
+              onStepChanging: function (event, currentIndex, newIndex) {
+                  form.validate().settings.ignore = ":disabled,:hidden";
+                   
+                  if(newIndex == 2){
+                     logFormData(form)
+                  }else{
+                    console.log("disabled")
+                  }
+                 
+                  return form.valid();
+              },
+              onFinishing: function (event, currentIndex) {
+                  form.validate().settings.ignore = ":disabled";
+                
+                  return form.valid();
+                   
+              },
+              onFinished: function (event, currentIndex) {
+                  
+               form.submit();
+    
+              }
+          }).validate({
+              errorPlacement: function errorPlacement(error, element) {
+                  element.after(error);
+              },
+              rules: {
+                  confirm: {
+                      equalTo: "#password"
+                  }
+              }
+          });
+      });
+      function logFormData(form, displaySelector = "#display-current-datas ul") {
+        const formData = {};
+        const $display = $(displaySelector).empty();
+        form.find("[name]").each(function () {
+            const { name } = this;
+            const value = $(this).val();
+            if (name && name !== 'csrfmiddlewaretoken') {
+                formData[name] = value;
+                // Create readable label (capitalize + replace _)
+                const label = name.replace(/_/g, ' ') .replace(/\b\w/g, char => char.toUpperCase());                           
+                $display.append(`<li><strong>${label}</strong>: ${value}</li>`);
+            }
+        });
+        return formData;
+    }
+
+
+
+  </script>
+{% endblock %}

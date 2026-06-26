@@ -1,0 +1,247 @@
+
+{% extends 'base/container.html' %}
+{% load static %}
+{% block title %} Invoice-Peport {% endblock %}
+
+{% block style %}
+<style>
+    label {
+    display: unset; 
+    margin-bottom: .5rem;
+}
+.class-filter {
+    display: flex;
+    align-items: flex-end;
+}
+</style>
+
+
+{% endblock %}
+{% block body_content %} 
+
+
+ <div class="wrapper">
+   <div class="wrapper-title">
+    <div class="wrapper-content">Invoice Report List</div>
+    <div class="wrapper-actions">
+        <button class="btn btn-secondary" style="display: inline-flex;gap:2px;" onclick="history.back()">  <i class="material-icons">arrow_circle_left</i>Back</button>
+    </div>
+   </div> 
+ 
+    <div class="card ">
+    <!--Qoutaion Report List Table Start-->
+        <div class="adv-table">   
+            <div class="class-filter row">
+                <div class="col-2">
+                  
+                     <label cfor ="quotation">Invoice No</lable>
+                     <select class="form-control select2" name="quotation" id ="quotation" multiple="multiple" placeholder="select">
+                         {% for quotation in quotations%}
+                         <option value="{{quotation.id}}">{{quotation}}</option>
+                        {% endfor%}
+                     </select>
+                  
+                </div>
+                <div class="col-2">
+                    <label class="form-lable" for ="customers">Customers </lable>
+                    <select class="form-control select2" name="customer" id="customer" multiple="multiple">
+                         {% for customer in customers%}
+                       <option value="{{customer.customer__id}}">{{customer.customer__name}}</option>
+                         {% endfor%}
+                     </select>
+                </div>
+                <div class="col-2">
+                    <label class="form-lable" for ="approver">Approvers </lable>
+                    <select class="form-control select2" name="approver" id="approver" multiple="multiple">
+                         {% for approver in approvers%}
+                       <option value="{{approver.approver__id}}">{{approver.approver__first_name}}</option>
+                          {% endfor%}
+                     </select>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="status">Status</label>
+                    <select class="form-control select2" name="status" id="status">
+                       <option value="">All</option>           
+                       <option value="pending">Pending</option>
+                       <option value="approved">Approved</option>
+                       <option value="sent_to_manager">Sent to Approver</option>      
+                       <option value="pending_payment">Pending Payment</option>  
+                       <option value="rejected">Rejected</option>     
+                          
+                                            
+                     </select>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="request_date_from">Request date
+                     </label>
+                    <div class="d-flex gap-1">
+                        <input type="date" class="form-control" id="request_date_from" name="request_date_from" placeholder="From">
+                        <input type="date" class="form-control" id="request_date_to" name="request_date_to" placeholder="To">
+                    </div>
+                </div>
+                <div class="col-2">
+                     <button class="btn btn-warning" type="button" onclick="fetchQuotations()">Filter</button>
+                     <button class="btn btn-success" type="button" id="download-xlsx">Excel</button>
+                </div>
+            </div>
+            <div class="mt-2" id="quotationTable"></div>
+        </div>
+   </div>
+ </div>
+
+
+{% endblock %}
+{% block js %}
+ <link rel="stylesheet" href="{% static 'assets/tabulator/css/tabulator.min.css'%}" />
+<script type="text/javascript" src="{% static 'assets/tabulator/js/xlsx.full.min.js'%}"></script>
+<script type="text/javascript" src="{% static 'assets/tabulator/js/tabulator.min.js'%}"></script>
+<script type="text/javascript" src="{% static 'assets/tabulator/js/jspdf.umd.min.js'%}"></script>
+<script type="text/javascript" src="{% static 'assets/tabulator/js/jspdf.plugin.autotable.min.js'%}"></script>
+<script>
+    // Initialize Tabulator (empty for now)
+    var table = new Tabulator("#quotationTable", {
+   
+        layout: "fitColumns",
+        pagination:"local",
+        paginationSize:10,
+        paginationSizeSelector:[3, 6, 8, 10],
+        movableColumns:true,
+        paginationCounter:"rows",
+        responsiveLayout:"collapse",
+        placeholder: "No records found",
+
+        columns: [
+            {title:"S.No", formatter:"rownum", width:70, hozAlign:"center"},
+            {title:"Request Date", field:"request_date"},
+            {title:"Invoice", field:"invoice_number"},
+            {title:"Customer", field:"customer.name"},
+            {title:"Approver", field:"approver.name"},
+             {
+                title:"Discount",
+                field:"discount",
+                formatter:function(cell){
+                    let val = cell.getValue();
+                    return val !== null ? val+"%" : "";
+                }
+            },
+            {
+                title:"Price",
+                field:"price",
+                hozAlign:"right",
+                formatter:"money",
+                bottomCalc:"sum",                // ✅ calculate total
+                bottomCalcFormatter:"money",     // ✅ format total like money
+                bottomCalcFormatter:function(cell){
+        let value = cell.getValue();
+        return value ? "Total Price: $" + value.toLocaleString() : "Total Price: $0.00";
+    }
+            },
+            {title:"Status", field:"status"},
+           
+        ],
+    });
+
+    // XLSX Export
+    document.getElementById("download-xlsx").addEventListener("click", function(){
+    table.download("xlsx", "Invoice.xlsx", {
+        sheetName: "Invoice",
+        documentProcessing: function(workbook){
+            var sheet = workbook.Sheets[workbook.SheetNames[0]];
+            var range = XLSX.utils.decode_range(sheet["!ref"]);
+            var lastRow = range.e.r + 1;
+
+            var total = 0;
+            var calcResults = table.getCalcResults();
+            if (calcResults && calcResults.bottom && typeof calcResults.bottom.price === "number") {
+                total = calcResults.bottom.price;
+            }
+
+            var priceCol = range.s.c;
+            for (var c = range.s.c; c <= range.e.c; c++) {
+                var headerCell = sheet[XLSX.utils.encode_cell({r: range.s.r, c: c})];
+                if (headerCell && headerCell.v === "Price") {
+                    priceCol = c;
+                    break;
+                }
+            }
+
+            var labelCell = XLSX.utils.encode_cell({r: lastRow, c: Math.max(range.s.c, priceCol - 1)});
+            var totalCell = XLSX.utils.encode_cell({r: lastRow, c: priceCol});
+            sheet[labelCell] = {t: "s", v: "Total Price"};
+            sheet[totalCell] = {t: "n", v: total};
+
+            sheet["!ref"] = XLSX.utils.encode_range(range.s, {r: lastRow, c: range.e.c});
+            return workbook;
+        }
+    });
+});
+
+    // Fetch data from Django backend
+    function fetchQuotations() {
+        const formData = new FormData();
+        // Multiple selects
+        let quotationVals = Array.from(document.getElementById("quotation").selectedOptions).map(opt => opt.value);
+        let customerVals = Array.from(document.getElementById("customer").selectedOptions).map(opt => opt.value);
+        let approverVals = Array.from(document.getElementById("approver").selectedOptions).map(opt => opt.value);
+        quotationVals.forEach(val => formData.append("quotation", val));
+        customerVals.forEach(val => formData.append("customer", val));
+        approverVals.forEach(val => formData.append("approver", val));
+
+        // Single values
+        let statusVal = document.getElementById("status").value;
+        let requestDateFromVal = document.getElementById("request_date_from").value;
+        let requestDateToVal = document.getElementById("request_date_to").value;
+        let requestDateFilter = buildRequestDateFilter(requestDateFromVal, requestDateToVal);
+        if (statusVal) formData.append("status", statusVal);
+        if (requestDateFilter) formData.append("request_date", requestDateFilter);
+
+        fetch(window.location.href, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRFToken": getCookie("csrftoken")
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.data && data.data.length > 0) {
+                table.setData(data.data);   // load data into Tabulator
+            } else {
+                table.clearData();          // clear if no records
+            }
+        })
+        .catch(err => {
+            console.error("Error:", err);
+        });
+    }
+
+    // Run once on page load
+    fetchQuotations();
+
+    // Reusable request date helper: single date or range
+    function buildRequestDateFilter(fromDate, toDate) {
+        if (fromDate && toDate) {
+            return `${fromDate} to ${toDate}`;
+        }
+        return fromDate || toDate || "";
+    }
+
+    // CSRF helper for Django POST
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+{% endblock %}

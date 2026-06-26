@@ -1,0 +1,260 @@
+
+{% extends 'base/container.html' %}
+{% load static %}
+{% block title %}Invoice{% endblock %}
+{% block style %}
+ <link rel="stylesheet" href="{% static 'assets/data-tables/DT_bootstrap.css'%}" /> 
+<style>
+ .card-custom-header {
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 800;
+}
+.custom-row-data {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    padding: 0px 10px 0px 12px;
+}
+.form-body {
+    padding: 12px;
+    background-color: #f4f4f4;
+    border-radius: 5px;
+}
+.group-icon-f{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.group-icon-f i {
+    background-color: #94939300;
+    font-size: 25px;
+}
+.har-row{
+ 
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+ 
+}
+.action-btn {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+</style>
+
+
+{% endblock %}
+{% block body_content %} 
+
+ <div class="wrapper">
+<div class="wrapper-title">
+    <div class="wrapper-content">Invoice  List</div>
+    <div class="wrapper-actions">
+        <a class="btn btn-add"  href="{%url 'invoice_request'%}"><i class="fa fa-plus"></i> Add</a> 
+        <button class="btn btn-secondary" style="display: inline-flex;gap:2px;" onclick="history.back()">  <i class="material-icons">arrow_circle_left</i>Back</button>
+    </div>
+   </div>
+    <div class="card ">
+          <!--Qoutaion List Table Start-->
+                 <div class="adv-table">
+                       <table class="display table table-bordered" id="invoice-table">
+                            <thead>
+                               <tr>  
+                                    <th>S.NO</th>
+                                    <th>Invoice Number</th>
+                                    <th>Request By</th>
+                                    <th>Customer</th>                                  
+                                    <th>Request Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                              
+                                </tr>
+                            </thead>
+                            <tbody>
+                               
+                                {% for quotation in quotations%}
+                              
+                                <tr class="gradeX">
+                                    <td  >{{forloop.counter}}</td>
+                                    <td onclick="window.location.href='{% url 'invoice_details' quotation.id %}'">{{quotation.invoice_number}}</td>
+                                    <td onclick="window.location.href='{% url 'invoice_details' quotation.id %}'">{{quotation.approver.get_full_name}}</td>
+                                    <td onclick="window.location.href='{% url 'invoice_details' quotation.id %}'">{{quotation.customer.name}}</td>
+                                    <td onclick="window.location.href='{% url 'invoice_details' quotation.id %}'">{{ quotation.request_date|date:"d M Y" }}</td>
+                                    <td onclick="window.location.href='{% url 'invoice_details' quotation.id %}'">
+                                    {%if quotation.approver_status == 'paid'%}
+                                        <span class="badge badge-success" >{{ quotation.get_approver_status_display  }}</span>
+                                  {% elif quotation.approver_status == 'pending_payment'%}
+                                  <span class="badge badge-warning" >{{ quotation.get_approver_status_display  }}</span>
+                                           {%else%}
+                                        <span class="badge badge-danger" >{{ quotation.get_approver_status_display  }}</span>
+                                    {%endif%}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-del btn-sm" onclick="confirmDeletedUpdate('{% url 'invoice_delete' quotation.id %}')">
+                                            <i class="fa fa-trash-o "></i>
+                                        </button>
+                                    </td>
+                                    
+                                </tr> 
+                                
+                                {% endfor%}
+                           </tbody>
+                       </table>
+                    </div>
+                <!--Qoutaion List Table End-->  
+            </div>
+                <!--Add user Model Start-->
+                <div class="modal fade" id="add-customer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add Customer</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="" id="customer-form">
+                                {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                                        <div class="col-sm-10">
+                                            <input type="email" class="form-control" name="email" id="inputEmail3" placeholder="Email" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="phonenumber" class="col-sm-2 col-form-label">Phone Number</label>
+                                        <div class="col-sm-10">
+                                            <input type="number" class="form-control"name="phone_number" id="phone_number" placeholder="1233" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="gstnumber" class="col-sm-2 col-form-label">GST Number</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control"name="gst_number" id="gstnumber" placeholder="GST Number" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" id ="submit-customer">Add</button>
+                                    </div>
+                                </form>
+                            </div>
+            
+                        </div>
+                    </div>
+                </div>
+                <!--Add User model End-->
+</div>
+{% endblock %}
+{% block js %}
+     
+ <script>
+   $(document).ready(function() {
+    $('#invoice-table').DataTable({
+            ordering: false,
+    order: [['all', 'asc']]   // 0 = first column, ascending +dec oder 
+    });
+});
+
+function Apitest(id) {
+ 
+    const url = "{% url 'quotation_test' %}";  // Make sure this is your Django view URL
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ document_id: id })  
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "quotation.pdf";  // desired filename
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        showMessage("Something went wrong!", "danger");
+    });
+}
+
+
+function submitQuotationAction(id) {
+    const action = document.querySelector(`#action-${id}`).value;
+    const discount = document.querySelector(`#discount-${id}`).value;
+
+    if (!action) {
+        alert("Please select an action.");
+        return;
+    }
+
+    if (discount && (discount < 0 || discount > 100)) {
+        alert("Discount must be between 0 and 100.");
+        return;
+    }
+
+    const url = "{% url 'quotation_approval' 0 %}".replace(0, id);
+ 
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": getCookie('csrftoken'),
+        },
+        body: new URLSearchParams({
+            discount: discount,
+            status: action
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => {
+                throw new Error(err.message || "Something went wrong");
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+ console.log(response)
+        alert(data.message || "Quotation updated successfully.");
+        // Optionally reload table or refresh row
+    })
+    .catch(error => {
+        alert("Error: " + error.message);
+    });
+}
+</script>
+
+
+
+{% endblock %}

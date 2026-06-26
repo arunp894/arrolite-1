@@ -1,0 +1,66 @@
+{% extends 'base/container.html' %}
+{% load static %}
+{% block title %}Product {% endblock %}
+
+{% block style %}
+ <style>
+    .permission-items {
+    display: flex;
+    gap: 13px;
+    flex-direction: row;
+    font-size: 14px;
+    font-weight: 700;
+    
+}
+.permission-pages {
+    
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-top: 1rem;
+    
+}
+.permission-items input[type=checkbox] {
+    width: 16px;
+    height: 16px;
+    margin: 3px;
+}
+ </style>
+{% endblock %}
+{% block body_content %} 
+<div class="wrapper">
+    <div class="wrapper-title">
+    <div class="wrapper-content">{{group.name}} -Update</div>
+    <div class="wrapper-actions">
+         
+        <button class="btn btn-secondary" style="display: inline-flex;gap:2px;" onclick="history.back()">  <i class="material-icons">arrow_circle_left</i>Back</button>
+    </div>
+   </div> 
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                 {% csrf_token %}
+                <div class=" ">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" placeholder="add Group Name" id="name" class="form-control" value="{{ group.name }}" required>
+                </div>
+                <div class="permission-pages mt-3">
+                    {% for permission_page in permission_pages %}
+                        {% if permission_page.perm %}
+                            <div class="permission-items">
+                                <label for="{{ permission_page.perm }}">{{ permission_page.name }}</label>
+                                <input type="checkbox" name="permissions" value="{{ permission_page.perm }}" id="{{ permission_page.perm }}" {% if permission_page.perm in selected_perms %}checked{% endif %}>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="btn  float-end btn-primary mt-3">Update</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+{% endblock %}

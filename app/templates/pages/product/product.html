@@ -1,0 +1,354 @@
+
+{% extends 'base/container.html' %}
+{% load static %}
+{% block title %}Product {% endblock %}
+
+{% block style %}
+
+<style>
+ .card-custom-header {
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 800;
+}
+</style>
+ 
+    <link rel="stylesheet" href="{% static 'assets/data-tables/DT_bootstrap.css'%}" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+{% endblock %}
+{% block body_content %} 
+ <div class="wrapper">
+    <div class="wrapper-title">
+    <div class="wrapper-content">Products List</div>
+    <div class="wrapper-actions">
+         <a class="btn btn-add" data-bs-toggle="modal" data-bs-target="#project-model"><i class="fa fa-plus"></i> Add</a>
+         
+        <button class="btn btn-secondary" style="display: inline-flex;gap:2px;" onclick="history.back()">  <i class="material-icons">arrow_circle_left</i>Back</button>
+    </div>
+   </div>
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <section class="card">
+               
+               <div class="card-body">
+                    <div class="adv-table">
+                       <table class="display table table-bordered" id="hidden-table-info">
+                            <thead>
+                               <tr>
+                                    <th>S.NO</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th class="hidden-phone">Sub-Category</th>
+                                    <th class="hidden-phone">Unit</th>
+                                    <th class="hidden-phone">Price</th>
+                                    <th class="hidden-phone">Width</th>
+                                    <th class="hidden-phone">Height</th>
+                                    <th class="hidden-phone">Custom</th>
+                                    <th class="hidden-phone">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                          
+                                {%for product in Products %}
+                                <tr class="gradeX">
+                                    <td>{{ forloop.counter }}</td>  
+                                    <td>{{product.name}}</td>
+                                    <td>{{product.category.name}}</td>
+                                    <td>{{product.subcategory.name}}</td>
+                                    <td>{{product.unit.symbol}}</td>
+                                    <td>{{product.price}}</td>
+                                    <td>{{product.width}}</td>
+                                    <td>{{product.height}}</td>
+                                    <td class="hidden-phone">
+                                        {% if product.is_custom %}
+                                            <span class="badge bg-primary">Yes</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">No</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button id ="edit-product-btn" data-bs-toggle="modal" data-bs-target="#project-edit-model" class="btn btn-edi btn-sm edit-category-btn" data-id="{{product.id}}"
+                                         data-name="{{product.name}}" data-categorie="{{product.category.id}}" data-subcategory="{{product.subcategory.id}}" 
+                                         data-unit="{{product.unit.id}}"  data-description="{{product.description}}"  data-price="{{product.price}}" 
+                                         data-width="{{product.width|default:'0.00'}}"  data-fixed_price ="{{product.fixed_price}}"
+                                         data-is_custom="{{product.is_custom}}"
+                                         data-height="{{product.height|default:'0.00'}}"  ><i class="fa fa-pencil"></i></button>
+                                         
+                                         <button class="btn btn-del btn-sm" onclick="confirmDeletedUpdate('{% url 'product_delete' product.id%}')"><i class="fa fa-trash-o "></i></button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                               
+                           </tbody>
+                       </table>
+                    </div>
+               </div>
+               <!--add Project Model Start-->
+                <div class="modal fade" id="project-model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="myModal2">Add</h5>
+                                <button type="button" class="btn-close custom-close" data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="cmxform form-horizontal tasi-form" id="project-add-form" method="post" action="#">
+                                    {% csrf_token %}
+                                        <div class="form-group row">
+                                            <label for="name" class="control-label col-lg-2">Product Name</label>
+                                            <div class="col-lg-10">
+                                                <input class=" form-control" id="name" name="name" type="text" />
+                                            </div>
+                                        </div>
+                                        
+                                         
+                                        <div class="form-group row">
+                                            <label for="name" class="control-label col-lg-2">Category Name</label>
+                                            <div class="col-lg-10">
+                                                <select class="form-control" id="category" name="category" required>
+                                                    {% for category in categories %}
+                                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                                    {% empty %}
+                                                        <option disabled>No categories available</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                         <div class="form-group row">
+                                            <label for="name" class="control-label col-lg-2">Sub-Category Name</label>
+                                            <div class="col-lg-10">
+                                                <select class="form-control" id="subcategory" name="subcategory">
+                                                     <option value="">--</option>
+                                                    {% for category in subcategories %}
+                                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                                    {% empty %}
+                                                        <option disabled>No Sub-categories available</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                                <label for="width" class="control-label col-lg-2">Width</label>
+                                                <div class="col-lg-2">
+                                                    <input type="text" class="form-control " name="width" id="width" min="1" step="any" />
+                                                </div>
+
+                                                <label for="text" class="control-label col-lg-2">Height</label>
+                                                <div class="col-lg-2">
+                                                    <input type="text" class="form-control" name="height" id="height" />
+                                                </div>
+                                                <label for="unit" class="control-label col-lg-2">Unit</label>
+                                                <div class="col-lg-2">
+                                                   
+                                                    <select class="form-control" id="unit" name="unit">
+                                                        {% for unit in units %}
+                                                            <option value="{{ unit.id }}">{{ unit.symbol }}</option>
+                                                        {% empty %}
+                                                            <option disabled>No Unit available</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                         <div class="form-group row ">
+                                            <label for="description" class="control-label col-lg-2">Price</label>
+                                            <div class="col-lg-6"> 
+                                               <input type="number" class="form-control" name="price" id="price" step="0.01" min="0" placeholder="0.00" />    
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <label for="fixed_price" class="control-label text-danger">Fixed</label>
+                                                <input type="checkbox" name="fixed_price" id="fixed_price1"  placeholder="Fixed Price" />                                            </div>
+                                            <div class="col-lg-2">
+                                                <label for="is_custom" class="control-label text-primary">Custom</label>
+                                                <input type="checkbox" name="is_custom" id="is_custom1"  placeholder="Is Custom" />                                            </div>
+                                         </div>
+
+                                         </div>
+                                        <div class="form-group row ">
+                                            <label for="description" class="control-label col-lg-2">Description</label>
+                                            <div class="col-lg-10"> 
+                                                <textarea class=" form-control"  name="description" id="description"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" id="category-submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               <!--add project Model End-->
+
+            <!--add Project Edit Model Start-->
+                <div class="modal fade" id="project-edit-model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="myModal2">Edit</h5>
+                                <button type="button" class="btn-close custom-close" data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="cmxform form-horizontal tasi-form" id="project-edit-form" method="post" action="#">
+                                    {% csrf_token %}
+                                        <div class="form-group row">
+                                            <label for="name" class="control-label col-lg-2">Product Name</label>
+                                            <div class="col-lg-10">
+                                                <input class=" form-control" id="name" name="name" type="text" />
+                                            </div>
+                                        </div>
+                                        
+                                         
+                                        <div class="form-group row">
+                                            <label for="name" class="control-label col-lg-2">Category Name</label>
+                                            <div class="col-lg-10">
+                                                <select class="form-control" id="category" name="category">
+                                                    {% for category in categories %}
+                                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                                    {% empty %}
+                                                        <option disabled>No categories available</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                         <div class="form-group row">
+                                            <label for="name" class="control-label col-lg-2">Sub-Category Name</label>
+                                            <div class="col-lg-10">
+                                                <select class="form-control" id="subcategory" name="subcategory">
+                                                     <option value="">--</option>
+                                                    {% for category in subcategories %}
+                                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                                    {% empty %}
+                                                        <option disabled>No Sub-categories available</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                                <label for="width" class="control-label col-lg-2">Width</label>
+                                                <div class="col-lg-2">
+                                                    <input type="text" class="form-control " name="width" id="width" min="1" step="any" />
+                                                </div>
+
+                                                <label for="height" class="control-label col-lg-2">Height</label>
+                                                <div class="col-lg-2">
+                                                    <input type="text" class="form-control" name="height" id="height" />
+                                                </div>
+                                                <label for="unit" class="control-label col-lg-2">Unit</label>
+                                                <div class="col-lg-2">
+                                                   
+                                                    <select class="form-control" id="unit" name="unit">
+                                                        {% for unit in units %}
+                                                            <option value="{{ unit.id }}">{{ unit.symbol }}</option>
+                                                        {% empty %}
+                                                            <option disabled>No Unit available</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                         <div class="form-group row ">
+                                            <label for="description" class="control-label col-lg-2">Price</label>
+                                            <div class="col-lg-6"> 
+                                                <input type="text" class="form-control" name="price" id="price" />
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <label for="fixed_price" class="control-label text-danger">Fixed</label>
+                                                <input type="checkbox" name="fixed_price" id="fixed_price"  placeholder="Fixed Price" />                                            </div>
+                                            <div class="col-lg-2">
+                                                <label for="is_custom" class="control-label text-primary">Custom</label>
+                                                <input type="checkbox" name="is_custom" id="is_custom"  placeholder="Is Custom" />                                            </div>
+                                         </div>
+                                        </div>
+                                        <div class="form-group row ">
+                                            <label for="description" class="control-label col-lg-2">Description</label>
+                                            <div class="col-lg-10"> 
+                                                <textarea class=" form-control"  name="description" id="description"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" id="category-edit-submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               <!--add project Edit Model End-->
+			</section>
+	    </div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$('#hidden-table-info').dataTable( { } );       
+
+$(function () {
+    const modal = $("#project-edit-model");
+    const form = $("#project-edit-form");
+    // Populate modal form
+    $(".edit-category-btn").click(function () {
+         const btn = $(this);
+         const categoryId = btn.data("categorie");
+         const subcategoryId = btn.data("subcategory");
+         const unitId = btn.data("unit");
+         form.attr("data-id", btn.data("id"));
+         form.find("#name").val(btn.data("name"));
+         form.find("#width").val(btn.data("width")|| '');
+         form.find("#height").val(btn.data("height") || '');
+         form.find("#price").val(btn.data("price") || '');
+         const fixedPrice = btn.data("fixed_price"); // will be "True" or "False"
+         form.find("#fixed_price").prop("checked", String(fixedPrice).toLowerCase() === "true"); 
+         const isCustom = btn.data("is_custom"); // will be "True" or "False"
+         form.find("#is_custom").prop("checked", String(isCustom).toLowerCase() === "true"); 
+         form.find("#category").val(categoryId);
+         form.find("#subcategory").val(subcategoryId);
+         form.find("#unit").val(unitId);
+         form.find("#description").val(btn.data("description") || '');
+ 
+    });
+
+    // Submit updated form via AJAX
+    $("#category-edit-submit").click(function () {
+ 
+        const id = form.attr("data-id");
+        const url = "{% url 'product_edit' 0 %}".replace("0", id);
+ 
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: form.serialize(),
+            headers: {
+                "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()
+            },
+            success: function (res) {
+                if (res.success) {
+                    modal.modal("hide");
+                    DisplayAlert(true,res.message)
+                    window.location.reload();    
+                } else {
+                    DisplayAlert(false,"Validation error")
+                    console.log(res.errors);
+                }
+            },
+            error: function (err) {
+                 
+                DisplayAlert(false,"Server error")
+                console.error(err.responseText);
+            }
+        });
+    });
+});
+</script>
+ 
+{% endblock %}

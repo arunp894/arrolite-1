@@ -1,0 +1,195 @@
+{% extends 'base/container.html' %}
+{% load static %}
+{% block title %}Report Quotation{% endblock %}
+
+{% block style %}
+<style>
+.chat-container {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+    background: #f2f4f7;
+    border-radius: 16px;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.message-row {
+    display: flex;
+    margin: 12px 0;
+}
+
+.from-user {
+    justify-content: flex-end;
+}
+
+.from-eng {
+    justify-content: flex-start;
+}
+
+.message-bubble {
+    max-width: 75%;
+    padding: 14px 18px;
+    border-radius: 18px;
+    font-size: 15px;
+    line-height: 1.5;
+    box-shadow: 0 3px 8px #00000010;
+    position: relative;
+}
+
+.user-bubble {
+    background: #434dc22b;
+    color: black;
+    border-bottom-right-radius: 4px;
+}
+
+.eng-bubble {
+    background: #6fce6cff;
+    color: #222;
+    border-bottom-left-radius: 4px;
+}
+
+.message-bubble img,.chat-image {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 10px;
+    margin-top: 10px;
+    display: block;
+    object-fit: cover;
+}
+
+.chat-file a {
+    display: inline-block;
+    margin-top: 5px;
+    color: #0066ff;
+    text-decoration: underline;
+}
+
+.edit-btn, .fa-edit {
+    background: #ffffff40;
+    color: #000;
+    border: none;
+    padding: 4px 10px;
+    font-size: 14px;
+    border-radius: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.edit-btn:hover, .fa-edit:hover {
+    background: #ffffff70;
+}
+</style>
+{% endblock %}
+
+{% block body_content %}
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<div class="wrapper">
+    <div id="chatApp" class="chat-container">
+
+        <div v-for="msg in chat" :key="msg.id">
+
+            <!-- USER MESSAGE -->
+            <div class="message-row from-user">
+                <div class="message-bubble user-bubble">
+
+                    <div v-html="limitBreaks(msg.user_comment)"></div> 
+                    <!-- User Files -->
+                    <div v-for="file in msg.user_files" :key="file.id" class="chat-file">
+                        <img v-if="isImage(file.file)" :src="file.file" class="chat-image">
+                        <a v-else-if="isPDF(file.file)" :href="file.file" target="_blank">📄[[ getFileName(file.file) ]]</a>
+                        <a v-else-if="isExcel(file.file)" :href="file.file" target="_blank">📊 [[ getFileName(file.file) ]]</a>
+                        <a v-else :href="file.file" target="_blank">📁[[ getFileName(file.file) ]]</a>
+                    </div>
+
+                    <i class="fa fa-edit" @click="editUserComment(msg)"></i>
+
+                </div>
+            </div>
+
+            <!-- ENGINEER MESSAGE -->
+            <div class="message-row from-eng">
+                <div class="message-bubble eng-bubble">
+
+                    <div v-html="limitBreaks(msg.eng_comment)" ></div> 
+                    <!-- Engineer Files -->
+                    <div v-for="file in msg.eng_files" :key="file.id" class="chat-file">
+                        <img v-if="isImage(file.file)" :src="file.file" class="chat-image">
+                        <a v-else-if="isPDF(file.file)" :href="file.file" target="_blank">📄 [[ getFileName(file.file) ]]</a>
+                        <a v-else-if="isExcel(file.file)" :href="file.file" target="_blank">📊[[ getFileName(file.file) ]]</a>
+                        <a v-else :href="file.file" target="_blank">📁 [[ getFileName(file.file) ]]</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+const app = Vue.createApp({
+    delimiters: ['[[', ']]'],
+    data() {
+        return {
+            chat: [
+                {
+                    id: 1,
+                    user_comment: `<p>review code <img src="https://upload.wikimedia.org/wikipedia/en/5/51/Bharathiar_University_logo.png"></p>`,
+                    user_files: [
+                        { id: 1, file: "https://via.placeholder.com/300.png" },
+                        { id: 2, file: "/media/sample.pdf" },
+                        { id: 3, file: "/media/sample.xlsx" }
+                    ],
+                    eng_comment: `<p>Noted 👍 <img src="https://upload.wikimedia.org/wikipedia/en/5/51/Bharathiar_University_logo.png"</p>`,
+                    eng_files: [
+                        { id: 1, file: "/media/engineer_doc.pdf" }
+                    ]
+                },
+                {
+                    id: 2,
+                    user_comment: `<p>review code again <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Bharathiar_university_admin_block.jpg/500px-Bharathiar_university_admin_block.jpg"</p>`,
+                    user_files: [
+                        { id: 4, file: "https://via.placeholder.com/200.jpg" }
+                    ],
+                    eng_comment: `<p>Checked ✅</p>`,
+                    eng_files: []
+                }
+            ]
+        };
+    },
+    methods: {
+         limitBreaks(html, maxBreaks = 5) {
+        // replace all <br> or <br/> tags with limited number
+        let breakCount = 0;
+        return html.replace(/<br\s*\/?>/gi, match => {
+            breakCount++;
+            return breakCount <= maxBreaks ? match : '';
+        });
+    },
+        isImage(file) {
+            return /\.(jpg|jpeg|png|gif|bmp)$/i.test(file);
+        },
+        isPDF(file) {
+            return /\.pdf$/i.test(file);
+        },
+        isExcel(file) {
+            return /\.(xls|xlsx)$/i.test(file);
+        },
+        getFileName(file) {
+            return file.split("/").pop();
+        },
+        editUserComment(msg) {
+            let updated = prompt("Edit your comment:", msg.user_comment);
+            if (updated !== null) {
+                msg.user_comment = updated;
+            }
+        }
+    }
+});
+
+app.mount("#chatApp");
+</script>
+{% endblock %}
