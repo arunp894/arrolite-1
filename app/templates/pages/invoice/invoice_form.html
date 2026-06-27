@@ -1,12 +1,10 @@
-
 {% extends 'base/container.html' %}
 {% load static %}
 {% block title %}Product {% endblock %}
 
 {% block style %}
-
 <style>
- .card-custom-header {
+.card-custom-header {
     display: flex;
     align-content: center;
     justify-content: space-between;
@@ -25,7 +23,7 @@
     background-color: #f4f4f4;
     border-radius: 5px;
 }
-.group-icon-f{
+.group-icon-f {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -34,14 +32,12 @@
     background-color: #94939300;
     font-size: 25px;
 }
-.har-row{
- 
+.har-row {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-between;
- 
 }
 .action-btn {
     margin-top: 10px;
@@ -80,14 +76,6 @@ input[type="checkbox"]::before {
     right: -6px;
     top: -6px;
 }
-input[type="checkbox"]::before {
-    bottom: -6px;
-    content: "";
-    left: -6px;
-    position: absolute;
-    right: -6px;
-    top: -6px;
-}
 input[type="checkbox"],
 input[type="checkbox"]::after {
     transition: all 100ms ease-out;
@@ -102,16 +90,12 @@ input[type="checkbox"]::after {
     top: 3px;
     width: 14px;
 }
-input[type="checkbox"] {
-    cursor: default;
-}
+input[type="checkbox"] { cursor: default; }
 input[type="checkbox"]:hover {
     background-color: #c9cbcd;
     transition-duration: 0s;
 }
-input[type="checkbox"]:checked {
-    background-color: #6e79d6;
-}
+input[type="checkbox"]:checked { background-color: #6e79d6; }
 input[type="checkbox"]:checked::after {
     background-color: #fff;
     left: 22px;
@@ -124,39 +108,19 @@ input[type="checkbox"]:checked:hover::after {
     background-color: #fff;
     left: 22px;
 }
-input[type="checkbox"]:focus:not(.focus-visible) {
-    outline: 0;
-}
-
+input[type="checkbox"]:focus:not(.focus-visible) { outline: 0; }
 label.text-center.tb-checkbox span {
     margin-left: 10px;
     vertical-align: top;
 }
 @media (max-width: 768px) {
-    .wrapper-title {
-        flex-direction: column;
-        text-align: center;
-    }
-    .wrapper-actions {
-        margin-top: 10px;
-    }
-    .custom-row-data {
-        flex-wrap: wrap;
-    }
-    .custom-row-data > * {
-        min-width: 100%;
-    }
-    .tip-box {
-        width: 100%;
-    }
-    .table-header-row {
-        flex-direction: column;
-        gap: 0;
-    }
-    .table-header-cell {
-        width: 100% !important;
-        flex: none !important;
-    }
+    .wrapper-title { flex-direction: column; text-align: center; }
+    .wrapper-actions { margin-top: 10px; }
+    .custom-row-data { flex-wrap: wrap; }
+    .custom-row-data > * { min-width: 100%; }
+    .tip-box { width: 100%; }
+    .table-header-row { flex-direction: column; gap: 0; }
+    .table-header-cell { width: 100% !important; flex: none !important; }
 }
 .table-header-row {
     display: flex;
@@ -175,460 +139,638 @@ label.text-center.tb-checkbox span {
     padding: 8px 5px;
     flex: 0 0 auto;
 }
-.table-header-cell.col-switch {
-    
-    text-align: center;
+.table-header-cell.col-switch { text-align: center; }
+.table-header-cell.col-product { flex: 0 0 150px; }
+.table-header-cell.col-qty { width: 80px; }
+.table-header-cell.col-width { width: 80px; }
+.table-header-cell.col-height { width: 80px; }
+.table-header-cell.col-unit { width: 80px; }
+.table-header-cell.col-description { flex: 1; min-width: 120px; }
+.table-header-cell.col-total { width: 100px; }
+.table-header-cell.col-action { text-align: center; }
+
+/* Add Product modal fixed checkbox layout */
+#add-product-modal .form-check-inline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
-.table-header-cell.col-product {
-    flex: 0 0 150px;
-}
-.table-header-cell.col-qty {
-    width: 80px;
-}
-.table-header-cell.col-width {
-    width: 80px;
-}
-.table-header-cell.col-height {
-    width: 80px;
-}
-.table-header-cell.col-unit {
-    width: 80px;
-}
-.table-header-cell.col-description {
-    flex: 1;
-    min-width: 120px;
-}
-.table-header-cell.col-total {
-    width: 100px;
-}
-.table-header-cell.col-action {
-   
-    text-align: center;
+#add-product-modal input[type="checkbox"] {
+    appearance: auto;
+    width: auto;
+    height: auto;
+    background-color: initial;
+    border-radius: initial;
 }
 </style>
     <link href="{% static 'assets/advanced-datatable/media/css/demo_page.css'%}" rel="stylesheet" />
     <link href="{% static 'assets/advanced-datatable/media/css/demo_table.css'%}" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'assets/data-tables/DT_bootstrap.css'%}" />
-    <!-- Bootstrap JS (v5.x) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}
-{% block body_content %} 
 
+{% block body_content %}
 <div class="wrapper">
-    
-<div class="wrapper-title">
-    <div class="wrapper-content">  Invoice Form</div>
-    <div class="wrapper-actions">
-        <button class="btn btn-secondary" style="display: inline-flex;gap:2px;" onclick="history.back()">  <i class="material-icons">arrow_circle_left</i>Back</button>
+
+    <div class="wrapper-title">
+        <div class="wrapper-content">Invoice Form</div>
+        <div class="wrapper-actions">
+            <button class="btn btn-secondary" style="display:inline-flex;gap:2px;" onclick="history.back()">
+                <i class="material-icons">arrow_circle_left</i>Back
+            </button>
+        </div>
     </div>
-   </div>
-       <div class="card">
-            <form  class="cmxform form-horizontal tasi-form" id="project-add-form" method="post" action="#">
-                {% csrf_token %}
-                <div class=" ">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-                            <label class="" for="inlineFormInput">Customer</label>
-                            <div class="group-icon-f">
+
+    <div class="card">
+        <form class="cmxform form-horizontal tasi-form" id="project-add-form" method="post" action="#">
+            {% csrf_token %}
+            <div class=" ">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                        <label for="inlineFormInput">Customer</label>
+                        <div class="group-icon-f">
                             <select class="form-control select2" id="category" name="user">
-                                    {% for user in users %}
-                                        <option value="{{ user.id }}">{{ user }}</option>
-                                    {% empty %}
-                                        <option disabled>No user available</option>
-                                    {% endfor %}
+                                {% for user in users %}
+                                    <option value="{{ user.id }}">{{ user }}</option>
+                                {% empty %}
+                                    <option disabled>No user available</option>
+                                {% endfor %}
                             </select>
-                            <a href=""  href="#" data-bs-toggle="modal" data-bs-target="#add-customer">
-                                <i class="fa fa-user"></i></a>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#add-customer">
+                                <i class="fa fa-user"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                        <label for="requite_date" class="control-label">Request Date</label>
+                        <input type="date" class="form-control" name="requite_date" required/>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                        <div class="tip-box p-3 rounded bg-light border">
+                            <strong>Tip:</strong>
+                            <p class="tip-text mb-0">
+                                Enable the switch in each product row to enter a custom total.
+                                When the switch is off, total price is calculated automatically.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2"></div>
+
+                <div id="add-requests" class="form-body mt-2">
+                    <div class="table-header-row">
+                        <div class="table-header-cell col-switch">Manual</div>
+                        <div class="table-header-cell col-product">Product</div>
+                        <div class="table-header-cell col-qty">Qty</div>
+                        <div class="table-header-cell col-width">Width</div>
+                        <div class="table-header-cell col-height">Height</div>
+                        <div class="table-header-cell col-unit">Unit</div>
+                        <div class="table-header-cell col-description">Description</div>
+                        <div class="table-header-cell col-total">Total</div>
+                        <div class="table-header-cell col-action">Action</div>
+                    </div>
+                    <div class="msg-content" style="text-align:center;font-size:larger;font-weight:900;">
+                        <a href="#" id="add-request-btn" class="add-request-btn">
+                            Add Product <i class="fa fa-plus text-success"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-2 mb-2">
+                    <textarea name="description" class="form-control" placeholder="Enter the text..."></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" id="category-submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         ADD PRODUCT MODAL
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="modal fade" id="add-product-modal" tabindex="-1" role="dialog"
+         aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">
+                        <i class="fa fa-plus-circle text-success me-1"></i> Add New Product
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-product-form" novalidate>
+                        {% csrf_token %}
+                        <!-- Name -->
+                        <div class="form-group row mb-2">
+                            <label class="col-sm-2 col-form-label">
+                                Product Name <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="name"
+                                       id="ap-name" placeholder="e.g. Aluminium Sheet 1200×600" required>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-                            <label for="requite_date" class="control-label ">Request Date</label>
-                            <input type="date" class="form-control" name="requite_date" required/>
-                        </div>  
-                         <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-                            <div class="tip-box p-3 rounded bg-light border">
-                                <strong>Tip:</strong>
-                                <p class="tip-text mb-0">
-                                    Enable the switch in each product row to enter a custom total. When the switch is off, total price is calculated automatically.
-                                </p>
+                        <!-- Category -->
+                        <div class="form-group row mb-2">
+                            <label class="col-sm-2 col-form-label">
+                                Category <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="category" id="ap-category" required>
+                                    <option value="">-- Select Category --</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
-                         </div>
-                            
-                        
-                    </div>   
-                    <div class="row mt-2">               
+                        </div>
+                        <!-- Sub-Category -->
+                        <div class="form-group row mb-2">
+                            <label class="col-sm-2 col-form-label">Sub-Category</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="subcategory" id="ap-subcategory">
+                                    <option value="">-- None --</option>
+                                    {% for sc in subcategories %}
+                                        <option value="{{ sc.id }}">{{ sc.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Dimensions + Unit -->
+                        <div class="form-group row mb-2">
+                            <label class="col-sm-2 col-form-label">Width</label>
+                            <div class="col-sm-2">
+                                <input type="number" step="any" min="0" class="form-control"
+                                       name="width" id="ap-width" placeholder="0">
+                            </div>
+                            <label class="col-sm-1 col-form-label">Height</label>
+                            <div class="col-sm-2">
+                                <input type="number" step="any" min="0" class="form-control"
+                                       name="height" id="ap-height" placeholder="0">
+                            </div>
+                            <label class="col-sm-1 col-form-label">Unit</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" name="unit" id="ap-unit">
+                                    {% for unit in units %}
+                                        <option value="{{ unit.id }}">{{ unit.symbol }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Price + Fixed -->
+                        <div class="form-group row mb-2">
+                            <label class="col-sm-2 col-form-label">
+                                Price <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="number" step="0.01" min="0" class="form-control"
+                                       name="price" id="ap-price" placeholder="0.00" required>
+                            </div>
+                            <div class="col-sm-3 d-flex align-items-center gap-2">
+                                <label class="text-danger mb-0 fw-bold">Fixed&nbsp;Price</label>
+                                <input type="checkbox" name="fixed_price" id="ap-fixed-price"
+                                       style="appearance:auto;width:auto;height:auto;background:initial;border-radius:initial;">
+                            </div>
+                        </div>
+                        <!-- Description -->
+                        <div class="form-group row mb-2">
+                            <label class="col-sm-2 col-form-label">Description</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" name="description"
+                                          id="ap-description" rows="2"
+                                          placeholder="Optional notes about this product"></textarea>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                    <div id="add-requests" class="form-body mt-2">
-                         <div class="table-header-row">
-                                <div class="table-header-cell col-switch">Manual</div>
-                                <div class="table-header-cell col-product">Product</div>
-                                <div class="table-header-cell col-qty">Qty</div>
-                                <div class="table-header-cell col-width">Width</div>
-                                <div class="table-header-cell col-height">Height</div>
-                                <div class="table-header-cell col-unit">Unit</div>
-                                <div class="table-header-cell col-description">Description</div>
-                                <div class="table-header-cell col-total">Total</div>
-                                <div class="table-header-cell col-action">Action</div>
-                            </div> 
-                    <div class="msg-content" style="
-                        text-align: center;
-                        font-size: larger;
-                        font-weight: 900;
-                    ">  <a href="#" id="add-request-btn" class="add-request-btn">Add Product
-                        <i class="fa fa-plus text-success"  > </i></a></div>
-                    </div>
-                    <div  class="mt-2 mb-2">
-                            <textarea name="description" id="" class="form-control" placeholder="Enter the text..." ></textarea>
-                            </div>
-                    </div>
                 <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" id="category-submit" class="btn btn-primary">Save</button>
-                    </div>
-            </form>
-        </div> 
-                
-                     <!--Add user Model Start-->
-                <div class="modal fade" id="add-customer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Add  </h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form class="" id="customer-form">
-                                {% csrf_token %}
-                                    <div class="form-group row">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-                                        <div class="col-sm-10">
-                                            <input type="email" class="form-control" name="email" id="inputEmail3" placeholder="Email" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="phonenumber" class="col-sm-2 col-form-label">Phone Number</label>
-                                        <div class="col-sm-10">
-                                        <div class="input-group">
-                                            
-                                            <input type="tel" class="form-control" name="phone_number" id="phone_number"
-                                                placeholder="Enter phone number" pattern="[0-9]{10}" maxlength="10" required>
-                                        </div>                                        </div>
-                                    </div>
-                                     
-                                    <div class="form-group row">
-                                        <label for="address" class="col-sm-2 col-form-label">Address</label>
-                                        <div class="col-sm-10">
-                                           <textarea class="form-control" name="address" id="address" placeholder="Enter Address" rows="2"  ></textarea>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary" id ="submit-customer">Add</button>
-                                    </div>
-                                </form>
-                            </div>
-            
-                        </div>
-                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="ap-submit-btn">
+                        <span id="ap-btn-text">Save Product</span>
+                        <span id="ap-btn-spinner"
+                              class="spinner-border spinner-border-sm d-none ms-1"
+                              role="status" aria-hidden="true"></span>
+                    </button>
                 </div>
-                <!--Add User model End-->
-</div>
+            </div>
+        </div>
+    </div>
+    <!-- END ADD PRODUCT MODAL -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         ADD CUSTOMER MODAL
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="modal fade" id="add-customer" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Customer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="" id="customer-form">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="name" name="name"
+                                       placeholder="Name" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" name="email"
+                                       id="inputEmail3" placeholder="Email" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="phonenumber" class="col-sm-2 col-form-label">Phone Number</label>
+                            <div class="col-sm-10">
+                                <input type="tel" class="form-control" name="phone_number"
+                                       id="phone_number" placeholder="Enter phone number"
+                                       pattern="[0-9]{10}" maxlength="10" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="address" class="col-sm-2 col-form-label">Address</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" name="address" id="address"
+                                          placeholder="Enter Address" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="submit-customer">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END ADD CUSTOMER MODAL -->
+
+</div><!-- /.wrapper -->
 {% endblock %}
+
 {% block js %}
 <script>
-
-
-    $(document).ready(function () {
+$(document).ready(function () {
     let counter = 0;
 
-    /*const unitMap = {
-        '1': 'mm', '2': 'cm', '3': 'm', '4': 'in', '5': 'ft',
-        '6': 'mm²', '7': 'cm²', '8': 'm²', '9': 'in²', '10': 'ft²'
-    };*/
-     
     const PRODUCTS_DATA = {
         {% for product in products %}
         "{{ product.id }}": {
             name: "{{ product.name|escapejs }}",
-            width: "{{ product.width|default:"null" }}",
-            height: "{{ product.height|default:"null" }}",
+            width: "{{ product.width|default:'null' }}",
+            height: "{{ product.height|default:'null' }}",
             price: "{{ product.price|default:0 }}",
             unit: "{{ product.unit.symbol|default:'mm' }}",
             fixed_price: "{{ product.fixed_price }}"
- 
         },
         {% endfor %}
     };
 
     const UNIT_MAP = {
-    {% for u in units %}
-    "{{ u.symbol }}": {{ u.to_mm_factor }},
-    {% endfor %}
-};
+        {% for u in units %}
+        "{{ u.symbol }}": {{ u.to_mm_factor }},
+        {% endfor %}
+    };
 
-function convertToMM(value, unitSymbol) {
-    const factor = UNIT_MAP[unitSymbol] || 1;
-    return value * factor;
-}
-
-function calculateTotal(row) {
-    const qty = parseFloat(row.find('.qty-input').val()) || 0;
-    const selectedOption = row.find('.product-select option:selected');
-    const productId = selectedOption.val();
-    const product = PRODUCTS_DATA[productId];
-    const widthRow = row.find('.dimension-row');
-
-    if (!product || !product.price) {
-        row.find('.total-cost').val("Invalid");
-        widthRow.hide();
-        return;
+    function convertToMM(value, unitSymbol) {
+        const factor = UNIT_MAP[unitSymbol] || 1;
+        return value * factor;
     }
 
-    const hasDimensions = (
-        product.width && product.width !== "null" &&
-        product.height && product.height !== "null"
-    );
-    const isFixedPrice = String(product.fixed_price).toLowerCase() === "true";
-    if (hasDimensions && !isFixedPrice) {
-        widthRow.show();
+    function calculateTotal(row) {
+        const qty = parseFloat(row.find('.qty-input').val()) || 0;
+        const productId = row.find('.product-select').val();
+        const product = PRODUCTS_DATA[productId];
+        const widthRow = row.find('.dimension-row');
 
-        const width = parseFloat(row.find('input[name^="width_"]').val()) || 0;
-        const height = parseFloat(row.find('input[name^="height_"]').val()) || 0;
-
-        // unit from dropdown (now symbol like "mm", "cm", etc.)
-        const inputUnit = row.find('.unit-select').val() || 'mm';
-        const productUnit = product.unit || 'mm';
-
-        const widthInMM = convertToMM(width, inputUnit);
-        const heightInMM = convertToMM(height, inputUnit);
-        const productWidthInMM = convertToMM(product.width, productUnit);
-        const productHeightInMM = convertToMM(product.height, productUnit);
-
-        const productArea = productWidthInMM * productHeightInMM || 1;
-        const requestedArea = widthInMM * heightInMM;
-
-        const scale = requestedArea / productArea;
-        const total = qty * product.price * scale;
-
-        row.find('.total-cost').val(total.toFixed(2));
-    } else {
- 
-       
-        if(isFixedPrice){
-             widthRow.show();
-        }else{
-             widthRow.hide();
+        if (!product || !product.price) {
+            row.find('.total-cost').val("Invalid");
+            widthRow.hide();
+            return;
         }
-        const total = qty * product.price;
-        row.find('.total-cost').val(total.toFixed(2));
+
+        const hasDimensions = (
+            product.width && product.width !== "null" &&
+            product.height && product.height !== "null"
+        );
+        const isFixedPrice = String(product.fixed_price).toLowerCase() === "true";
+
+        if (hasDimensions && !isFixedPrice) {
+            widthRow.show();
+            const width  = parseFloat(row.find('input[name^="width_"]').val())  || 0;
+            const height = parseFloat(row.find('input[name^="height_"]').val()) || 0;
+            const inputUnit   = row.find('.unit-select').val() || 'mm';
+            const productUnit = product.unit || 'mm';
+            const widthInMM   = convertToMM(width,  inputUnit);
+            const heightInMM  = convertToMM(height, inputUnit);
+            const productWidthInMM  = convertToMM(product.width,  productUnit);
+            const productHeightInMM = convertToMM(product.height, productUnit);
+            const productArea   = productWidthInMM * productHeightInMM || 1;
+            const requestedArea = widthInMM * heightInMM;
+            const scale = requestedArea / productArea;
+            row.find('.total-cost').val((qty * product.price * scale).toFixed(2));
+        } else {
+            if (isFixedPrice) { widthRow.show(); } else { widthRow.hide(); }
+            row.find('.total-cost').val((qty * product.price).toFixed(2));
+        }
     }
-}
 
-    function updateProductDropdowns() {
-        const selectedValues = $('.product-select').map(function () {
-            return $(this).val();
-        }).get();
+    // ─── Build a fresh row HTML ──────────────────────────────────────────────
+    function buildRowHtml(idx) {
+        // Build options from current PRODUCTS_DATA so newly added products appear immediately
+        let productOptions = '<option value="">Select Product</option>';
+        productOptions += '<option value="__add_new__" style="color:#198754;font-weight:600;">&#10010; Add New Product</option>';
+        {% for product in products %}
+        productOptions += '<option value="{{ product.id }}" data-price="{{ product.price }}">{{ product.name|escapejs }}</option>';
+        {% endfor %}
 
-        $('.product-select').each(function () {
-            const currentSelect = $(this);
-            const currentVal = currentSelect.val();
+        let unitOptions = '';
+        {% for unit in units %}
+        unitOptions += '<option value="{{ unit.symbol }}">{{ unit.symbol }}</option>';
+        {% endfor %}
 
-            currentSelect.find('option').each(function () {
-                const val = $(this).val();
-                if (val === "" || val === currentVal) {
-                    $(this).prop('disabled', false);
-                } else {
-                    $(this).prop('disabled', selectedValues.includes(val));
-                }
-            });
-        });
+        return `
+        <div class="form-group request-row custom-row-data mb-0" data-index="${idx}">
+            <div style="width:60px;text-align:center;">
+                <input type="hidden" name="is_manual_${idx}" value="0">
+                <input class="form-check-input" type="checkbox"
+                       name="custom_total_${idx}" value="1" id="custom_total_${idx}">
+            </div>
+            <select name="product_${idx}" class="select2 form-control product-select">
+                ${productOptions}
+            </select>
+            <input type="number" class="form-control qty-input"
+                   name="qty_${idx}" placeholder="Qty" min="1" value="1" />
+            <div class="dimension-row" style="display:contents;">
+                <input type="number" class="form-control" name="width_${idx}" placeholder="Width" />
+                <input type="number" class="form-control" name="height_${idx}" placeholder="Height" />
+                <select class="form-control unit-select select2" name="unit_${idx}">
+                    ${unitOptions}
+                </select>
+                <input type="text" class="form-control" name="description_${idx}" placeholder="Description" />
+            </div>
+            <input type="text" class="form-control total-cost"
+                   name="unit_cost_${idx}" readonly placeholder="Total" />
+            <a class="btn-sm remove-row"><i class="text-danger fa fa-minus-square"></i></a>
+        </div>`;
     }
 
-    // Add new row
+    // ─── Add row ─────────────────────────────────────────────────────────────
     $(document).on('click', '#add-request-btn', function (e) {
         e.preventDefault();
- 
-         const productCount = Object.keys(PRODUCTS_DATA).length;
-            if (counter >= productCount) {
-        DisplayAlert(false,"Only " + productCount + " unique product rows allowed.");
-        return;
-    }
+        const productCount = Object.keys(PRODUCTS_DATA).length;
+        if (counter >= productCount) {
+            DisplayAlert(false, "Only " + productCount + " unique product rows allowed.");
+            return;
+        }
         counter++;
-        // Remove existing add buttons to prevent duplicates
         $('.add-request-btn').remove();
 
-        const html = `
-        <div class="form-group request-row custom-row-data mb-0" data-index="${counter}">
-            <div style="width: 60px; text-align: center;">
-                <input type="hidden" name="is_manual_${counter}" value="0">
-                <input class="form-check-input" type="checkbox" name="custom_total_${counter}" value="1" id="custom_total_${counter}">
-            </div>
-            <select name="product_${counter}" class="select2 form-control product-select">
-                <option value="">Select Product</option>
-                {% for product in products %}
-                    <option value="{{ product.id }}" data-price="{{ product.price }}">{{ product.name }}</option>
-                {% endfor %}
-            </select>
-            <input type="number" class="form-control qty-input" name="qty_${counter}" placeholder="Qty" min="1" value="1" />
-            <div class="dimension-row" style="display: contents;">
-                <input type="number" class="form-control" name="width_${counter}" value="{{ product.value }}" placeholder="Width" />
-                <input type="number" class="form-control" name="height_${counter}" placeholder="Height" />
-               <select class="form-control unit-select select2" name="unit_${counter}">
-                {% for unit in units %}
-                    
-                     <option value="{{ unit.symbol }}">{{ unit.symbol }}</option>
-                {% empty %}
-                    <option disabled>No Unit available</option>
-                {% endfor %}
-            </select>
-                <input type="text" class="form-control" name="description_${counter}" placeholder="Description" />
-
-            </div> 
-              
-            <input type="text" class="form-control total-cost" name="unit_cost_${counter}" readonly placeholder="Total" />
-            <a class="btn-sm remove-row"><i class="text-danger fa fa-minus-square"></i></a>
-             
-        </div>
-        `;
-
+        const html = buildRowHtml(counter);
         $('#add-requests').append(html);
 
-        // Always re-append the "+" to the first row
-        const firstRow = $('.request-row').last();
-        if (firstRow.length > 0) {
-            firstRow.append(`
+        const lastRow = $('.request-row').last();
+        if (lastRow.length > 0) {
+            lastRow.append(`
                 <a href="#" class="btn-sm add-request-btn" id="add-request-btn">
                     <i class="text-success fa fa-plus-square"></i>
-                </a>
-            `);
+                </a>`);
         }
     });
- 
-    // Remove row
+
+    // ─── Remove row ──────────────────────────────────────────────────────────
     $(document).on('click', '.remove-row', function () {
         const row = $(this).closest('.request-row');
         const hadAddButton = row.find('#add-request-btn').length > 0;
         row.remove();
-
         if (hadAddButton) {
-            const firstRow = $('.request-row').first();
+            const firstRow = $('.request-row').last();
             if (firstRow.length > 0) {
-                // Re-append the "+" button to the first row
                 firstRow.append(`
                     <a href="#" class="btn-sm add-request-btn" id="add-request-btn">
                         <i class="text-success fa fa-plus-square"></i>
-                    </a>
-                `);
+                    </a>`);
             }
-           $(".select2").select2({
-           tags: true
-        });
+            $(".select2").select2({ tags: true });
         }
     });
 
-    // Prevent duplicate product selections
+    // ─── Product change ───────────────────────────────────────────────────────
     $(document).on('change', '.product-select', function () {
-    
-    const row = $(this).closest('.request-row');
-    const productId = $(this).val();
+        const val = $(this).val();
 
-    if (!productId) {
-        // reset if nothing selected
-        row.find('.qty-input').val(1);
-        row.find('input[name^="width_"]').val('');
-        row.find('input[name^="height_"]').val('');
-        row.find('.total-cost').val('');
-        return;
-    }
+        // "Add New Product" chosen → open modal
+        if (val === '__add_new__') {
+            _addProductTargetRow = $(this).closest('.request-row');
+            $(this).val('');   // reset back to blank
+            var apModal = new bootstrap.Modal(document.getElementById('add-product-modal'));
+            apModal.show();
+            return;
+        }
 
-    // lookup product details
-    const product = PRODUCTS_DATA[productId];
-     let duplicate = false;
-    $('.product-select').not(this).each(function () {
-        if ($(this).val() === productId) {
-            duplicate = true;
-            return false; // break loop
+        const row = $(this).closest('.request-row');
+        if (!val) {
+            row.find('.qty-input').val(1);
+            row.find('input[name^="width_"]').val('');
+            row.find('input[name^="height_"]').val('');
+            row.find('.total-cost').val('');
+            return;
+        }
+
+        const product = PRODUCTS_DATA[val];
+        if (product) {
+            if (product.width && product.width !== "null") {
+                row.find('input[name^="width_"]').val(product.width);
+            } else {
+                row.find('input[name^="width_"]').val('');
+            }
+            if (product.height && product.height !== "null") {
+                row.find('input[name^="height_"]').val(product.height);
+            } else {
+                row.find('input[name^="height_"]').val('');
+            }
+            row.find('.unit-select').val(product.unit).trigger('change');
+
+            const isFixed = String(product.fixed_price).toLowerCase() === "true";
+            if (isFixed) {
+                row.find('.dimension-row').hide();
+                row.find('input[name^="width_"]').prop('disabled', true);
+                row.find('input[name^="height_"]').prop('disabled', true);
+                row.find('.unit-select').prop('disabled', true);
+            } else {
+                row.find('.dimension-row').show();
+                row.find('input[name^="width_"]').prop('disabled', false);
+                row.find('input[name^="height_"]').prop('disabled', false);
+                row.find('.unit-select').prop('disabled', false);
+            }
+            calculateTotal(row);
         }
     });
 
- 
+    // ─── Recalc on qty / width / height / unit change ────────────────────────
+    $(document).on('input change',
+        '.qty-input, .unit-select, input[name^="width_"], input[name^="height_"]',
+        function () { calculateTotal($(this).closest('.request-row')); }
+    );
 
-    if (product) {
-        // set default values
-        if (product.width && product.width !== "null") {
-            row.find(`input[name^="width_"]`).val(product.width);
-        } else {
-            row.find(`input[name^="width_"]`).val('');
-        }
-
-        if (product.height && product.height !== "null") {
-            row.find(`input[name^="height_"]`).val(product.height);
-           
-        } else {
-            row.find(`input[name^="height_"]`).val('');
-        }
-
-        // update unit
-        row.find('.unit-select').val(product.unit).trigger('change');
-        const is_FixedPrice = String(product.fixed_price).toLowerCase() === "true";
-        if (is_FixedPrice) {
-        row.find('.dimension-row').hide();
-        row.find(`input[name^="width_"]`).prop('disabled', true);
-        row.find(`input[name^="height_"]`).prop('disabled', true);
-        row.find('.unit-select').prop('disabled', true);
-    } else {
-        row.find('.dimension-row').show();
-        row.find(`input[name^="width_"]`).prop('disabled', false);
-        row.find(`input[name^="height_"]`).prop('disabled', false);
-        row.find('.unit-select').prop('disabled', false);
-    }
-
-        // fixed price? hide dimension inputs
-        if (String(product.fixed_price).toLowerCase() === "true") {
-            row.find('.dimension-row').hide();
-        } else {
-            row.find('.dimension-row').show();
-        }
-
-        // recalc
-        calculateTotal(row);
-    }
-});
-
-    // On quantity/width/height/unit input change, recalculate
-    $(document).on('input change', '.qty-input, .unit-select, input[name^="width_"], input[name^="height_"]', function () {
-        calculateTotal($(this).closest('.request-row'));
-    });
-    $(document).on('change', 'input[name^="custom_total_"]', function() {
+    // ─── Manual toggle ────────────────────────────────────────────────────────
+    $(document).on('change', 'input[name^="custom_total_"]', function () {
         const row = $(this).closest('.request-row');
         const totalInput = row.find('.total-cost');
         if ($(this).is(':checked')) {
             totalInput.prop('readonly', false);
         } else {
             totalInput.prop('readonly', true);
-            // Recalculate total if unchecked
             calculateTotal(row);
         }
     });
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ADD PRODUCT MODAL LOGIC
+    // ═══════════════════════════════════════════════════════════════════════════
+    let _addProductTargetRow = null;
+
+    $('#ap-submit-btn').on('click', function () {
+        const form = document.getElementById('add-product-form');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        const $btn = $(this);
+        $btn.prop('disabled', true);
+        $('#ap-btn-spinner').removeClass('d-none');
+        $('#ap-btn-text').text('Saving…');
+
+        const formData = new FormData(form);
+
+        $.ajax({
+            url: "{% url 'product_create_ajax' %}",
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: { 'X-CSRFToken': getCookie('csrftoken') },
+            success: function (res) {
+                if (res.success) {
+                    const p = res.product;
+
+                    // 1. Register in PRODUCTS_DATA so calculateTotal works immediately
+                    PRODUCTS_DATA[p.id] = {
+                        name:        p.name,
+                        price:       p.price,
+                        width:       p.width,
+                        height:      p.height,
+                        unit:        p.unit,
+                        fixed_price: p.fixed_price
+                    };
+
+                    // 2. Append new <option> to every product-select on the page
+                    //    (insert before the "Add New Product" sentinel option)
+                    const newOpt = `<option value="${p.id}" data-price="${p.price}">${p.name}</option>`;
+                    $('.product-select').each(function () {
+                        if ($(this).find(`option[value="${p.id}"]`).length === 0) {
+                            // Insert before the __add_new__ sentinel
+                            const sentinel = $(this).find('option[value="__add_new__"]');
+                            if (sentinel.length) {
+                                sentinel.before(newOpt);
+                            } else {
+                                $(this).append(newOpt);
+                            }
+                        }
+                    });
+
+                    // 3. Auto-select in the triggering row and fire change logic
+                    if (_addProductTargetRow) {
+                        _addProductTargetRow.find('.product-select')
+                            .val(p.id)
+                            .trigger('change');
+                    }
+
+                    // 4. Close & reset
+                    bootstrap.Modal.getInstance(
+                        document.getElementById('add-product-modal')
+                    ).hide();
+                    form.reset();
+                    _addProductTargetRow = null;
+
+                    DisplayAlert(true, res.message);
+                } else {
+                    const msgs = Object.values(res.errors).flat().join('\n');
+                    DisplayAlert(false, msgs);
+                }
+            },
+            error: function (xhr) {
+                const res = xhr.responseJSON;
+                const msg = res && res.errors
+                    ? Object.values(res.errors).flat().join('\n')
+                    : 'An error occurred while saving the product.';
+                DisplayAlert(false, msg);
+            },
+            complete: function () {
+                $btn.prop('disabled', false);
+                $('#ap-btn-spinner').addClass('d-none');
+                $('#ap-btn-text').text('Save Product');
+            }
+        });
+    });
+
+    // Reset state when modal is dismissed without saving
+    $('#add-product-modal').on('hidden.bs.modal', function () {
+        document.getElementById('add-product-form').reset();
+        _addProductTargetRow = null;
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ADD CUSTOMER AJAX
+    // ═══════════════════════════════════════════════════════════════════════════
+    $('#submit-customer').click(function (e) {
+        e.preventDefault();
+        const data = {
+            name:         $('#name').val(),
+            email:        $('#inputEmail3').val(),
+            phone_number: $('#phone_number').val(),
+            address:      $('#address').val()
+        };
+        $.ajax({
+            url: "{% url 'register-customer' %}",
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                DisplayAlert(true, response.message);
+                $('#customer-form')[0].reset();
+                $('#add-customer').removeClass('show').removeAttr('style').attr('aria-hidden', 'true');
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open');
+                location.reload();
+            },
+            error: function (xhr) {
+                const res = xhr.responseJSON;
+                DisplayAlert(false, formatErrors(res.errors));
+            }
+        });
+    });
 });
-     
-// Utility to get CSRF token from cookies
+
+// ─── CSRF helper ─────────────────────────────────────────────────────────────
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
-            // Check cookie name
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
@@ -637,41 +779,5 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-        $('#submit-customer').click(function (e) {
-        e.preventDefault();
- 
-        const data = {
-            name: $('#name').val(),
-            email: $('#inputEmail3').val(),
-          //  phone_prefix: $('#phone_prefix').val(),
-            phone_number: $('#phone_number').val(),
-         
-            address: $('#address').val()
-    
-        };
-
-        $.ajax({
-            url: "{% url 'register-customer' %}",  // 🔁 Replace with your actual URL
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            success: function (response) {
-     
-               
-                DisplayAlert(true,response.message)
-                $('#customer-form')[0].reset();
-                $('#add-customer').removeClass('show').removeAttr('style').attr('aria-hidden', 'true');
-                $('.modal-backdrop').remove(); 
-                $('body').removeClass('modal-open');  
-                location.reload()
-            },
-            error: function (xhr) {
-                const res = xhr.responseJSON;
-                DisplayAlert(false, formatErrors(res.errors));
-                
-            }
-        });
-    });
 </script>
-
 {% endblock %}

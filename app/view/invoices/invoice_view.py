@@ -9,6 +9,8 @@ from app.models.iso_series.iso_series_model import ISOSize
 from app.models.product.product_model import Product
 from app.models.product.quotation_model import Quotation
 from app.models.unit.unit_model import Unit
+from app.models.category.category_model import Category
+from app.models.sub_category.sub_category_model import SubCategory
 from django.contrib import messages 
 from django.http import FileResponse, JsonResponse
 import json
@@ -69,14 +71,17 @@ class InvoiceRequestView(View):
         products = Product.active_objects.all()
         units = Unit.active_objects.all()
         customer = Customer.active_objects.all() 
-        iso_sizes = ISOSize.active_objects.all() 
+        iso_sizes = ISOSize.active_objects.all()
+        categories = Category.active_objects.all()
+        subcategories = SubCategory.active_objects.all()
         
         context = {
-             
             'products': products,
             'units': units,
             'users': customer,
-            "iso_sizes":iso_sizes
+            'iso_sizes': iso_sizes,
+            'categories': categories,
+            'subcategories': subcategories,
         }
  
         return render(request, self.template, context)
@@ -525,8 +530,6 @@ class InvoiceReportPdfView(View):
             ("TOPPADDING", (0, 0), (-1, -1), 0),
             ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
             ("TOPPADDING", (0, 0), (-1, -1), -12),
-            # ("BACKGROUND", (0, 0), (-1, -1), colors.green),  # ✅ background color
-
         ])
  
         # Right Block (logo + address)
@@ -605,9 +608,6 @@ class InvoiceReportPdfView(View):
     def footer(self, canvas, doc,quotation,quotationitems):
         canvas.saveState()
       
-       
-        #  that add that dection part 
-         
         canvas.setFillColorRGB(0.95, 0.95, 0.95)
         canvas.rect(doc.leftMargin - 0.5 * cm, 0.9 * cm, doc.width + 1 * cm, 2.1 * cm, stroke=0, fill=1)
 
@@ -624,26 +624,24 @@ class InvoiceReportPdfView(View):
         total_value_style = ParagraphStyle("TotalValue", fontName="Helvetica-Bold", fontSize=7, textColor=colors.whitesmoke, alignment=2)
 
         # === Left (FOR) ===
-        customer_add="39 Woodlands closeMEGA@woodlands #08-84 \n Singapore 737856"
         left_cell = [
             Paragraph("for", for_style),
             Paragraph(f"{quotation.customer.name}", company_style),
             Spacer(1, 5),
             Paragraph(f"{quotation.customer.address}", address_style),
         ]
-         
 
-         # === Right (TOTAL / DEPOSIT / BALANCE) as 2-column inner table ===
+        # === Right (TOTAL / DEPOSIT / BALANCE) as 2-column inner table ===
         right_inner_table = Table(
             [
                 [Paragraph("total", total_label_style),   Paragraph(f"<b><font size='10'>${total:,.2f}</font></b>", total_value_style)],
                 [Paragraph("deposit", total_label_style), Paragraph(f"<b><font size='10'>${advance_amount:,.2f}</font></b>", total_value_style)],
                 [Paragraph("balance", total_label_style), Paragraph(f"<b><font size='10'>${quotation.balance_due:,.2f}</font></b>", total_value_style)],
             ],
-            colWidths=[2 * cm, 3 * cm],  # adjust widths to balance text/value
+            colWidths=[2 * cm, 3 * cm],
             style=[
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-                ("ALIGN", (1, 0), (1, -1), "RIGHT"),  # right align values
+                ("ALIGN", (1, 0), (1, -1), "RIGHT"),
                 ("LEFTPADDING", (0, 0), (-1, -1), 0),
                 ("RIGHTPADDING", (0, 0), (-1, -1), 0),
                 ("TOPPADDING", (0, 0), (-1, -1), 2),
@@ -666,27 +664,19 @@ class InvoiceReportPdfView(View):
             ],
         )
 
-        # === Draw summary box instead of "For" ===
         w, h = summary_table.wrap(doc.width, doc.bottomMargin)
         summary_table.drawOn(canvas, doc.leftMargin, 5.4 * cm)
 
-        # Set red "thank you!"
         canvas.setFont("Helvetica-Bold", 40)
         canvas.setFillColor(colors.red)
-        #  that add that dection part 
-        
         canvas.drawString(doc.leftMargin, 3.6 * cm, "thank you!")
 
-        # Draw a light grey background rectangle (very slim)
-        canvas.setFillColorRGB(0.95, 0.95, 0.95)  # #f2f2f2
+        canvas.setFillColorRGB(0.95, 0.95, 0.95)
         canvas.rect(doc.leftMargin - 0.5 * cm, 0.9 * cm, doc.width + 1 * cm, 2.1 * cm, stroke=0, fill=1)
 
-        # OCBC Logo
         ocbc_img_path = get_static_asset_path('ac-imgs', 'ocbc_logo.png')
         canvas.drawImage(ocbc_img_path, doc.leftMargin, 1.3 * cm, width=1.2 * cm, height=1.3 * cm, mask='auto')
-        
 
-        # OCBC Bank Text
         canvas.setFont("Helvetica-Bold", 8)
         canvas.setFillColor(colors.red)
         canvas.drawString(doc.leftMargin + 1.5 * cm, 2.3 * cm, "bank transfer")
@@ -694,20 +684,15 @@ class InvoiceReportPdfView(View):
         canvas.setFont("Helvetica-Bold", 8)
         canvas.setFillColor(colors.black)
         canvas.drawString(doc.leftMargin + 1.5 * cm, 1.9 * cm, "current AC")
-
-        canvas.setFont("Helvetica-Bold", 8)
         canvas.drawString(doc.leftMargin + 1.5 * cm, 1.5 * cm, "595-28881-2001")
 
-        # First separator "or"
         canvas.setFont("Helvetica-Bold", 12)
         canvas.setFillColor(colors.red)
         canvas.drawString(doc.leftMargin + 5 * cm, 2.0 * cm, "or")
 
-        # PayNow logo
         paynow_img_path = get_static_asset_path('ac-imgs', 'paynow.png')
         canvas.drawImage(paynow_img_path, doc.leftMargin + 7 * cm, 1.5 * cm, width=1.2 * cm, height=1 * cm, mask='auto')
 
-        # UEN and company name
         canvas.setFont("Helvetica-Bold", 10)
         canvas.setFillColor(colors.black)
         canvas.drawString(doc.leftMargin + 8.7 * cm, 2.3 * cm, "uen")
@@ -716,18 +701,13 @@ class InvoiceReportPdfView(View):
         canvas.setFont("Helvetica", 6)
         canvas.drawString(doc.leftMargin + 8.7 * cm, 1.7 * cm, "ARROLITE PTE. LTD.")
 
-        # Second separator "or"
         canvas.setFont("Helvetica-Bold", 12)
         canvas.setFillColor(colors.red)
         canvas.drawString(doc.leftMargin + 12.2 * cm, 2.0 * cm, "or")
 
-        
-        # QR code
         qr_img_path = get_static_asset_path('ac-imgs', 'qr_img.jpeg')
-        canvas.drawImage(qr_img_path, doc.leftMargin + 16 * cm, 0.6 * cm,
-                         width=3 * cm, height=3 * cm, mask='auto')
+        canvas.drawImage(qr_img_path, doc.leftMargin + 16 * cm, 0.6 * cm, width=3 * cm, height=3 * cm, mask='auto')
 
-        
         canvas.setFont("Helvetica", 8)
         canvas.setFillColor(colors.red)
         canvas.drawString(doc.leftMargin, 0.6 * cm, "This is a computer generated and no signature is required.")
@@ -745,7 +725,6 @@ class InvoiceReportPdfView(View):
             topMargin=0.7 * cm,
             bottomMargin=3 * cm,
         )
-         # ── Config flags ─────────────────────────────────────────────────────
         config                = get_invoice_config().label or default_report_config()
         show_design_note      = config.get("show_design_note",      True)
         show_deposit_note     = config.get("show_deposit_note",     True)
@@ -760,14 +739,11 @@ class InvoiceReportPdfView(View):
             self.footer(canvas, doc, quotation,quotationitems)
         doc.addPageTemplates([PageTemplate(id='quote', frames=frame, onPage=header_with_data, onPageEnd=footer_with_data)])
 
-        # Styles
         normal_style = ParagraphStyle("normal", fontName="Helvetica", fontSize=8, leading=14,textColor=colors.HexColor("#74666a"))
         header_style = ParagraphStyle("header_style", fontName="Helvetica-Bold", fontSize=7, textColor=colors.white, spaceAfter=6)
         total_style = ParagraphStyle("total", fontName="Helvetica-Bold", fontSize=12, alignment=2)
 
-        # Sample data
-        body_data =  quotationitems
-        
+        body_data = quotationitems
 
         table_data = [[
             Paragraph("<b>description</b>", header_style),
@@ -775,12 +751,7 @@ class InvoiceReportPdfView(View):
             Paragraph("<b>quantity</b>", header_style),
             Paragraph("<b>price</b>", header_style),
         ]]
-        for_desc_style = ParagraphStyle(
-            "for_desc",
-            fontName="Helvetica-Bold",
-            fontSize=9,
-            textColor=colors.HexColor("#74666a"),
-        )
+        for_desc_style = ParagraphStyle("for_desc", fontName="Helvetica-Bold", fontSize=9, textColor=colors.HexColor("#74666a"))
 
         for item in body_data:
             product_text = f"""
@@ -811,13 +782,8 @@ class InvoiceReportPdfView(View):
             f"{quotation.discount}%" if quotation.allow_percentage_discount and quotation.is_percentage
             else f"${quotation.discount:,.2f}"
         )
-        elements = [
-            Spacer(1, 6 * cm),
-            body_table,
-            Spacer(1, 0.5 * cm),
-        ]
+        elements = [Spacer(1, 6 * cm), body_table, Spacer(1, 0.5 * cm)]
 
-         
         if show_discount_product:
             total_table = Table([
                 [f"Discount ({discount_label})", f"-${discount_amount:,.2f}"],
@@ -831,53 +797,15 @@ class InvoiceReportPdfView(View):
             ])
             elements.append(total_table)
         if show_design_note and design_note_text:
-            desc_table = Table(
+            elements.append(Table(
                 [[[Paragraph(f"*{design_note_text}", for_desc_style)]]],
                 style=[("FONTSIZE", (0, 0), (-1, -1), 8)]
-            )
-            elements.append(desc_table)
-
+            ))
         if show_deposit_note:
-            desc_table2 = Table(
+            elements.append(Table(
                 [[[Paragraph(f"- {deposit_note_text}", for_desc_style)]]],
                 style=[("FONTSIZE", (0, 0), (-1, -1), 8)]
-            )
-            elements.append(desc_table2)
-
-         
-         
-        # FOR / TOTAL block
-        # for_label_style = ParagraphStyle("for_label", fontName="Helvetica-Bold", fontSize=9, textColor=colors.red)
-        # for_desc_style = ParagraphStyle("for_label", fontName="Helvetica-Bold", fontSize=9, textColor=colors.HexColor("#74666a"))
-        # for_name_style = ParagraphStyle("for_name", fontName="Helvetica-Bold", fontSize=12, textColor=colors.HexColor("#74666a"))
-        # for_address_style = ParagraphStyle("for_address", fontName="Helvetica", fontSize=10, textColor=colors.gray)
-        # total_label_style = ParagraphStyle("total_label", fontName="Helvetica-Bold", fontSize=9, textColor=colors.white)
-        # total_value_style = ParagraphStyle("total_value", fontName="Helvetica-Bold", fontSize=12, textColor=colors.white, alignment=2)
-
-        # for_section = [
-        #     Paragraph("for", for_label_style),
-        #     Paragraph("HN CONSTRUCTION PTE LTD<br/>", for_name_style),
-        #     Spacer(1, 5), 
-        #     Paragraph("39 Woodlands close, MEGA@woodlands #08-84<br/>Singapore 737856", for_address_style)
-        # ]
-        # total_section = [
-        #     Paragraph("total", total_label_style),
-        #     Paragraph(f"${grand_total:,.2f}", total_value_style)
-        # ]
-         
-         
-         
-        # summary_table = Table([
-        #     [for_section, total_section]
-        # ], colWidths=[13.2 * cm, 6.3 * cm], style=[
-        #     ("BACKGROUND", (0, 0), (0, 0), colors.whitesmoke),
-        #     ("BACKGROUND", (1, 0), (1, 0), colors.HexColor("#231f20")),
-        #     ("LEFTPADDING", (0, 0), (-1, -1), 12),
-        #     ("TOPPADDING", (0, 0), (-1, -1), 12),
-        #     ("BOTTOMPADDING", (0, 0), (-1, -1), 12),
-        #     ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        # ])
-        # elements.append(summary_table)
+            ))
 
         doc.build(elements)
         buffer.seek(0)
@@ -887,15 +815,12 @@ class InvoiceReportView(View):
     template = "pages/invoice/invoice_report.html"
     def get(self, request):
         quotations = Invoice.active_objects.all() 
-        # Distinct approvers from quotations
-        
         approvers=(
                 quotations
                 .filter(approver__isnull=False)
                 .order_by("approver__id")  
                 .values("approver__id", "approver__first_name","approver__last_name").distinct()
             )
-        # Distinct customers from quotations
         customers =(
                 quotations
                 .filter(customer__isnull=False)
@@ -929,38 +854,32 @@ class InvoiceReportView(View):
             if customer_ids:
                 filters["customer__id__in"] = customer_ids
 
-            
             if request_date_str:
                 try:
-                
                     if isinstance(request_date_str, list):
                         request_date_str = request_date_str[0]
-
                     request_date_str = request_date_str.strip()
-
-                    if "to" in request_date_str:  # Date range case: "01-09-2025 to 06-09-2025"
+                    if "to" in request_date_str:
                         start_str, end_str = [d.strip() for d in request_date_str.split("to")]
                         filters["request_date__date__range"] = (
                             datetime.strptime(start_str, "%Y-%m-%d").date(),
                             datetime.strptime(end_str, "%Y-%m-%d").date()
                         )
-                    else:  # Single date case: "2025-09-06"
+                    else:
                         filters["request_date__date"] = datetime.strptime(request_date_str, "%Y-%m-%d").date()
-
                 except ValueError:
                     return JsonResponse(
                         {"error": "Invalid date format. Use YYYY-MM-DD or DD-MM-YYYY to DD-MM-YYYY"},
                         status=400
                     )
 
-            # Query database
             quotations_qs = (
                         Invoice.active_objects.filter(**filters).select_related("approver", "isosize").prefetch_related("customer", "invoiceitems") )                         
             data = [
                     {
                         "id": q.id,
                         "invoice_number": q.invoice_number,
-                        "price": float(q.total_cost),  # property, not callable
+                        "price": float(q.total_cost),
                         "approver": {
                             "id": q.approver.id,
                             "name": f"{q.approver.first_name} {q.approver.last_name}".strip()
@@ -983,16 +902,13 @@ class InvoiceReportView(View):
 
         except DatabaseError as db_err:
             return JsonResponse({"error": f"Database error: {str(db_err)}"}, status=500)
-        
         except Exception as e:
             return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
         
          
 class ProductReportInvoice(View):
- 
     template = "pages/invoice/product_invoice_report.html"
     def get(self, request):
-        products=Product.active_objects.all()
         products=Product.active_objects.all()
         invoices=Invoice.active_objects.all()
         approvers=(
@@ -1001,21 +917,19 @@ class ProductReportInvoice(View):
                 .order_by("approver__id")  
                 .values("approver__id", "approver__first_name","approver__last_name").distinct()
             )
-    
         customers =(
                 invoices
                 .filter(customer__isnull=False)
                 .order_by("customer__id")  
                 .values("customer__id", "customer__name").distinct()   
             )
-        
         context = {
             'products': products,
             "approvers":approvers,
             "customers":customers
-            
         }
         return render(request, self.template, context)
+
     def post(self, request):
         try:
             filters = {}
@@ -1026,12 +940,9 @@ class ProductReportInvoice(View):
             product_ids = request.POST.getlist("product")       
             request_date_str = request.POST.getlist("request_date")
             if quotation_ids:
-                quotation_ids = quotation_ids
                 filters["invoice__id__in"] = quotation_ids
             if product_ids:
-                product_ids = product_ids
                 filters["product__id__in"] = product_ids
-                
             if approver_ids:
                 filters["invoice__approver__id__in"] = approver_ids
             if status_list:
@@ -1041,37 +952,31 @@ class ProductReportInvoice(View):
 
             if request_date_str:
                 try:
-                   
                     if isinstance(request_date_str, list):
                         request_date_str = request_date_str[0]
-
                     request_date_str = request_date_str.strip()
-
-                    if "to" in request_date_str:  # Date range case: "01-09-2025 to 06-09-2025"
+                    if "to" in request_date_str:
                         start_str, end_str = [d.strip() for d in request_date_str.split("to")]
                         filters["invoice__request_date__date__range"] = (
                             datetime.strptime(start_str, "%d-%m-%Y").date(),
                             datetime.strptime(end_str, "%d-%m-%Y").date()
                         )
-                    else:  # Single date case: "2025-09-06"
+                    else:
                         filters["invoice__request_date__date"] = datetime.strptime(request_date_str, "%Y-%m-%d").date()
-
                 except ValueError:
                     return JsonResponse(
                         {"error": "Invalid date format. Use YYYY-MM-DD or DD-MM-YYYY to DD-MM-YYYY"},
                         status=400
                     )
 
-            # Query database
-            quotations_qs = (InvoiceItem.active_objects.filter(**filters).select_related("product" ) )  
-                                            
+            quotations_qs = (InvoiceItem.active_objects.filter(**filters).select_related("product"))
             data = [
                     {
                         "id": q.id,
                         "invoice_number": q.invoice.invoice_number,
                         "product": q.product.name,
-                        "price": float(q.unit_cost),  # property, not callable
-                        "qty": float(q.quantity),  # property, not callable                       
+                        "price": float(q.unit_cost),
+                        "qty": float(q.quantity),
                         "approver": {
                             "id": q.invoice.approver.id,
                             "name": f"{q.invoice.approver.first_name} {q.invoice.approver.last_name}".strip()
@@ -1094,26 +999,12 @@ class ProductReportInvoice(View):
 
         except DatabaseError as db_err:
             return JsonResponse({"error": f"Database error: {str(db_err)}"}, status=500)
-        
         except Exception as e:
             return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
      
 class InvoiceEditView(View):
-    """
-    Edit an existing Invoice.
-
-    Key behaviours
-    --------------
-    * GET  – loads the invoice with its items pre-filled.
-             The customer dropdown is LOCKED to the invoice's own customer
-             (only that one customer is passed to the template).
-    * POST – validates header fields, re-extracts items using the same
-             counter-based naming as InvoiceRequestView, then replaces
-             all InvoiceItem rows atomically.
-    """
     template = "pages/invoice/invoice_edit_form.html"
 
-    # ------------------------------------------------------------------ GET --
     def get(self, request, pk):
         invoice = get_object_or_404(
             Invoice.objects.prefetch_related("invoiceitems"),
@@ -1128,20 +1019,17 @@ class InvoiceEditView(View):
             "products":        products,
             "units":           units,
             "customer_list":        Customer.active_objects.all() ,
-            # ⚠️  Only the invoice's own customer — NOT all customers.
             "locked_customer": invoice.customer,
             "existing_items":  existing_items,
         }
         return render(request, self.template, context)
 
-    # ----------------------------------------------------------------- POST --
     def post(self, request, pk):
         invoice = get_object_or_404(Invoice, id=pk)
 
         requite_date = request.POST.get("requite_date")
         description  = request.POST.get("description")
         customer  = request.POST.get("customer_name")
-        
 
         if not requite_date:
             messages.error(request, "Request date is required.")
@@ -1152,8 +1040,6 @@ class InvoiceEditView(View):
             messages.error(request, "At least one product must be added.")
             return self._render_with_context(request, invoice)
 
-        # ✅ Update invoice header.
-        #    Customer is NOT changed on edit (locked to original).
         if customer:
             invoice.customer = Customer.objects.get(id=customer)
        
@@ -1161,7 +1047,6 @@ class InvoiceEditView(View):
         invoice.description  = description
         invoice.save()
 
-        # ✅ Replace all items atomically: delete old → insert new.
         with transaction.atomic():
             invoice.invoiceitems.all().delete()
             for item in items:
@@ -1170,13 +1055,7 @@ class InvoiceEditView(View):
         messages.success(request, "Invoice updated successfully.")
         return redirect("quotation_invoice")
 
-    # -------------------------------------------------------- helpers --------
     def _extract_valid_items(self, post_data):
-        """
-        Identical extraction logic to InvoiceRequestView.extract_valid_items.
-        Reads product_1/qty_1/width_1/height_1/unit_1/unit_cost_1/description_1
-        and increments until no product_N key is found.
-        """
         items   = []
         counter = 1
         while True:
@@ -1207,13 +1086,12 @@ class InvoiceEditView(View):
                         "auto_derivation": auto_derivation,
                     })
             except (Product.DoesNotExist, Unit.DoesNotExist, ValueError):
-                pass  # skip invalid rows
+                pass
 
             counter += 1
         return items
 
     def _render_with_context(self, request, invoice):
-        """Re-render the form with validation errors."""
         existing_items = invoice.invoiceitems.all()
         products       = Product.active_objects.all()
         units          = Unit.active_objects.all()
@@ -1224,4 +1102,4 @@ class InvoiceEditView(View):
             "locked_customer": invoice.customer,
             "existing_items":  existing_items,
         }
-        return render(request, self.template, context)     
+        return render(request, self.template, context)

@@ -543,3 +543,16 @@ INFO 2026-06-27 09:56:11,576 "GET /static/assets/data-tables/images/sort_both.pn
 INFO 2026-06-27 10:08:53,097 "GET /invoice-request/ HTTP/1.1" 200 82777
 INFO 2026-06-27 10:08:53,603 "GET /static/assets/advanced-datatable/media/css/demo_page.css HTTP/1.1" 200 1887
 INFO 2026-06-27 10:08:53,605 "GET /static/assets/advanced-datatable/media/css/demo_table.css HTTP/1.1" 200 11353
+INFO 2026-06-27 10:11:46,220 "GET /product-list/ HTTP/1.1" 200 194202
+INFO 2026-06-27 10:11:46,437 "GET /static/assets/data-tables/images/sort_asc.png HTTP/1.1" 200 231
+INFO 2026-06-27 10:13:24,786 "GET /quotation-awaiting/ HTTP/1.1" 200 40233
+INFO 2026-06-27 10:13:26,476 "GET /invoice-request/ HTTP/1.1" 200 82777
+INFO 2026-06-27 10:57:29,011 F:\python\env\Scripts\arrolite-1\app\urls.py changed, reloading.
+INFO 2026-06-27 10:57:29,597 Watching for file changes with StatReloader
+INFO 2026-06-27 10:58:44,717 F:\python\env\Scripts\arrolite-1\app\view\product\product_view.py changed, reloading.
+INFO 2026-06-27 10:58:45,230 Watching for file changes with StatReloader
+INFO 2026-06-27 11:02:03,739 F:\python\env\Scripts\arrolite-1\app\view\invoices\invoice_view.py changed, reloading.
+INFO 2026-06-27 11:02:04,247 Watching for file changes with StatReloader
+INFO 2026-06-27 11:09:39,913 "GET /invoice-request/ HTTP/1.1" 200 96314
+INFO 2026-06-27 11:09:40,468 "GET /static/img/logos/arrolite_logo.png HTTP/1.1" 200 230576
+WARNING 2026-06-27 11:09:40,495 "GET /invoice-request/img/favicon.html HTTP/1.1" 404 19969

@@ -34,6 +34,7 @@ from app.view.permission.permission import (
     PermissionSetting,
 )
 from app.view.product.product_view import (
+    ProductCreateAjax,
     ProductDelete,
     ProductEditView,
     ProductListView,
@@ -100,6 +101,7 @@ urlpatterns = [
     path("product-list/", ProductListView.as_view(), name="product_list"),
     path("product-edit/<int:pk>/", ProductEditView.as_view(), name="product_edit"),
     path("product-delete/<int:pk>/", ProductDelete.as_view(), name="product_delete"),
+    path("product-create-ajax/", ProductCreateAjax.as_view(), name="product_create_ajax"),
     # Quotation Path
     path("quotation-list/", QuotationListView.as_view(), name="quotation_list"),
     path(
@@ -111,7 +113,6 @@ urlpatterns = [
      path(
         "quotation/<int:pk>/edit/", QuotationEditView.as_view(), name="quotation_edit"
     ),
-    
     path(
         "quotation-report-pdf/", QuotationReportPdfView.as_view(), name="quotation_test"
     ),
@@ -121,7 +122,7 @@ urlpatterns = [
         QuotationApprove.as_view(),
         name="quotation_approval",
     ),
-    path("quotation-report/", QuotationReportView.as_view(), name="quotation_report"), 
+    path("quotation-report/", QuotationReportView.as_view(), name="quotation_report"),
     # Customer Path
     path("customer-list/", CustomerList.as_view(), name="customer_list"),
     path("customer-edit/<int:pk>", CustomerUpdate.as_view(), name="customer_edit"),
@@ -135,7 +136,7 @@ urlpatterns = [
     # Invoice List
     path("invoice-list/", InvoiceListView.as_view(), name="quotation_invoice"),
     path("invoice-request/", InvoiceRequestView.as_view(), name="invoice_request"),
-    path("invoice/<int:pk>/edit/", InvoiceEditView.as_view(), name="invoice_edit"), 
+    path("invoice/<int:pk>/edit/", InvoiceEditView.as_view(), name="invoice_edit"),
     path(
         "invoice-paid/",
         InvoiceRequestMarkPaidView.as_view(),
@@ -208,7 +209,6 @@ urlpatterns = [
     path("iso-list", ISOSizeListView.as_view(), name="iso_list"),
     path("iso-edit/<int:pk>", ISOSizeEditView.as_view(), name="iso_edit"),
     path("iso-delete/<int:pk>", ISOSizeDelete.as_view(), name="iso_delete"),
-     
     # test errors
     path("test-400/", custom_400, name="test_400"),
     path("test-403/", custom_403_csrf, name="test_403"),
