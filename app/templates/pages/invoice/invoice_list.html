@@ -77,7 +77,6 @@
                                     <th>Customer</th>                                  
                                     <th>Request Date</th>
                                     <th>Status</th>
-                                    <th>Action</th>
                               
                                 </tr>
                             </thead>
@@ -99,11 +98,6 @@
                                            {%else%}
                                         <span class="badge badge-danger" >{{ quotation.get_approver_status_display  }}</span>
                                     {%endif%}
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-del btn-sm" onclick="confirmDeletedUpdate('{% url 'invoice_delete' quotation.id %}')">
-                                            <i class="fa fa-trash-o "></i>
-                                        </button>
                                     </td>
                                     
                                 </tr> 

@@ -357,8 +357,7 @@ label.text-center.tb-checkbox span {
             height: {{ product.height|default:"null" }},
             price: {{ product.price|default:0 }},
             unit: "{{ product.unit.symbol|default:'mm' }}",
-            fixed_price: "{{ product.fixed_price }}",
-            is_custom: "{{ product.is_custom }}"
+            fixed_price: "{{ product.fixed_price }}"
         },
         {% endfor %}
     };
@@ -585,18 +584,6 @@ function calculateTotal(row) {
 
         // recalc
         calculateTotal(row);
-
-        // Check if custom product -> toggle manual price input
-        const isCustom = String(product.is_custom).toLowerCase() === "true";
-        const customCheck = row.find('input[name^="custom_total_"]');
-        const totalInput = row.find('.total-cost');
-        if (isCustom) {
-            customCheck.prop('checked', true);
-            totalInput.prop('readonly', false);
-        } else {
-            customCheck.prop('checked', false);
-            totalInput.prop('readonly', true);
-        }
     }
 });
 

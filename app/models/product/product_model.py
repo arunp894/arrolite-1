@@ -19,7 +19,6 @@ class Product(CustomBase):
     unit = models.ForeignKey("Unit", on_delete=models.SET_NULL, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     fixed_price = models.BooleanField(default=False)
-    is_custom = models.BooleanField(default=False)
     description = models.TextField(null=True, blank=True)
     class Meta:
         verbose_name = "Product"

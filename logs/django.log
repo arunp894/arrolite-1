@@ -1,1 +1,545 @@
 INFO 2026-06-26 14:51:17,727 Watching for file changes with StatReloader
+INFO 2026-06-26 14:58:46,597 "GET / HTTP/1.1" 302 0
+INFO 2026-06-26 14:58:48,213 "GET /login/ HTTP/1.1" 200 18391
+INFO 2026-06-26 14:58:48,295 "GET /favicon.ico HTTP/1.1" 302 0
+INFO 2026-06-26 14:58:48,298 "GET /login/ HTTP/1.1" 200 18391
+INFO 2026-06-26 15:01:54,017 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-06-26 15:01:54,838 "GET / HTTP/1.1" 200 32070
+INFO 2026-06-26 15:01:54,875 "GET /static/assets/select2/css/select2.min.css HTTP/1.1" 200 15197
+INFO 2026-06-26 15:01:54,878 "GET /static/assets/data-tables/DT_bootstrap.css HTTP/1.1" 200 3860
+INFO 2026-06-26 15:01:54,878 "GET /static/css/style-responsive.css HTTP/1.1" 200 13635
+INFO 2026-06-26 15:01:54,880 "GET /static/css/slidebars.css HTTP/1.1" 200 3860
+INFO 2026-06-26 15:01:54,881 "GET /static/css/style.css HTTP/1.1" 200 125253
+INFO 2026-06-26 15:01:54,903 "GET /static/js/jquery.dcjqaccordion.2.7.js HTTP/1.1" 200 6625
+INFO 2026-06-26 15:01:54,904 "GET /static/js/common-scripts.js HTTP/1.1" 200 4853
+INFO 2026-06-26 15:01:54,909 "GET /static/js/slidebars.min.js HTTP/1.1" 200 12930
+INFO 2026-06-26 15:01:54,909 "GET /static/js/respond.min.js HTTP/1.1" 200 4053
+INFO 2026-06-26 15:01:54,930 "GET /static/js/jquery.nicescroll.js HTTP/1.1" 200 64359
+INFO 2026-06-26 15:01:54,931 "GET /static/assets/data-tables/DT_bootstrap.js HTTP/1.1" 200 4327
+INFO 2026-06-26 15:01:54,934 "GET /static/js/jquery.js HTTP/1.1" 200 86929
+INFO 2026-06-26 15:01:54,936 "GET /static/js/jquery.scrollTo.min.js HTTP/1.1" 200 2441
+INFO 2026-06-26 15:01:54,957 "GET /static/assets/select2/js/select2.min.js HTTP/1.1" 200 66666
+INFO 2026-06-26 15:01:54,961 "GET /static/assets/data-tables/jquery.dataTables.js HTTP/1.1" 200 389605
+INFO 2026-06-26 15:01:55,000 "GET /static/img/search-icon.png HTTP/1.1" 200 1349
+INFO 2026-06-26 15:01:55,153 "GET /static/img/logos/arrolite_logo.png HTTP/1.1" 200 230576
+WARNING 2026-06-26 15:01:55,326 "GET /img/favicon.html HTTP/1.1" 404 19926
+ERROR 2026-06-26 15:02:01,422 Internal Server Error: /quotation-list/
+Traceback (most recent call last):
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "F:\python\env\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 241, in __get__
+    rel_obj = self.field.get_cached_value(instance)
+  File "F:\python\env\Lib\site-packages\django\db\models\fields\mixins.py", line 21, in get_cached_value
+    return instance._state.fields_cache[self.cache_name]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'product'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "F:\python\env\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "F:\python\env\Lib\site-packages\MySQLdb\connections.py", line 286, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+MySQLdb.OperationalError: (1054, "Unknown column 'app_product.is_custom' in 'field list'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "F:\python\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "F:\python\env\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\env\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\views\generic\base.py", line 145, in dispatch
+    return handler(request, *args, **kwargs)
+  File "F:\python\env\Scripts\arrolite-1\app\view\quotation\quotation_view.py", line 56, in get
+    return render(request, self.template, context)
+  File "F:\python\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "F:\python\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 788, in resolve
+    obj = self.var.resolve(context)
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+  File "F:\python\env\Scripts\arrolite-1\app\models\product\quotation_model.py", line 86, in items_to_json
+    "items": [item.to_json for item in self.items.all()]
+              ^^^^^^^^^^^^
+  File "F:\python\env\Scripts\arrolite-1\app\models\product\quotation_model.py", line 138, in to_json
+    "product_name": self.product.name,
+                    ^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 257, in __get__
+    rel_obj = self.get_object(instance)
+  File "F:\python\env\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 222, in get_object
+    return qs.get(self.field.get_reverse_related_filter(instance))
+           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\models\query.py", line 635, in get
+    num = len(clone)
+  File "F:\python\env\Lib\site-packages\django\db\models\query.py", line 372, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "F:\python\env\Lib\site-packages\django\db\models\query.py", line 2000, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\models\query.py", line 95, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "F:\python\env\Lib\site-packages\django\db\models\sql\compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "F:\python\env\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "F:\python\env\Lib\site-packages\MySQLdb\connections.py", line 286, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: (1054, "Unknown column 'app_product.is_custom' in 'field list'")
+ERROR 2026-06-26 15:02:01,432 "GET /quotation-list/ HTTP/1.1" 500 315640
+WARNING 2026-06-26 15:02:01,537 "GET /favicon.ico HTTP/1.1" 404 19911
+ERROR 2026-06-26 15:03:12,377 Internal Server Error: /quotation-awaiting/
+Traceback (most recent call last):
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "F:\python\env\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 241, in __get__
+    rel_obj = self.field.get_cached_value(instance)
+  File "F:\python\env\Lib\site-packages\django\db\models\fields\mixins.py", line 21, in get_cached_value
+    return instance._state.fields_cache[self.cache_name]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'product'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "F:\python\env\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "F:\python\env\Lib\site-packages\MySQLdb\connections.py", line 286, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+MySQLdb.OperationalError: (1054, "Unknown column 'app_product.is_custom' in 'field list'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "F:\python\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "F:\python\env\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\env\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\views\generic\base.py", line 145, in dispatch
+    return handler(request, *args, **kwargs)
+  File "F:\python\env\Scripts\arrolite-1\app\view\quotation\quotation_view.py", line 35, in get
+    return render(request, self.template, context)
+  File "F:\python\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "F:\python\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 788, in resolve
+    obj = self.var.resolve(context)
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+  File "F:\python\env\Scripts\arrolite-1\app\models\product\quotation_model.py", line 86, in items_to_json
+    "items": [item.to_json for item in self.items.all()]
+              ^^^^^^^^^^^^
+  File "F:\python\env\Scripts\arrolite-1\app\models\product\quotation_model.py", line 138, in to_json
+    "product_name": self.product.name,
+                    ^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 257, in __get__
+    rel_obj = self.get_object(instance)
+  File "F:\python\env\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 222, in get_object
+    return qs.get(self.field.get_reverse_related_filter(instance))
+           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\models\query.py", line 635, in get
+    num = len(clone)
+  File "F:\python\env\Lib\site-packages\django\db\models\query.py", line 372, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "F:\python\env\Lib\site-packages\django\db\models\query.py", line 2000, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\models\query.py", line 95, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "F:\python\env\Lib\site-packages\django\db\models\sql\compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "F:\python\env\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "F:\python\env\Lib\site-packages\MySQLdb\connections.py", line 286, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: (1054, "Unknown column 'app_product.is_custom' in 'field list'")
+ERROR 2026-06-26 15:03:12,382 "GET /quotation-awaiting/ HTTP/1.1" 500 318461
+INFO 2026-06-27 09:52:38,324 Watching for file changes with StatReloader
+INFO 2026-06-27 09:53:06,412 "GET / HTTP/1.1" 302 0
+INFO 2026-06-27 09:53:06,946 "GET /login/ HTTP/1.1" 200 18391
+INFO 2026-06-27 09:53:07,026 "GET /favicon.ico HTTP/1.1" 302 0
+INFO 2026-06-27 09:53:07,029 "GET /login/ HTTP/1.1" 200 18391
+INFO 2026-06-27 09:53:19,892 "POST /login/ HTTP/1.1" 200 18730
+INFO 2026-06-27 09:53:19,920 "GET /favicon.ico HTTP/1.1" 302 0
+INFO 2026-06-27 09:53:19,923 "GET /login/ HTTP/1.1" 200 18391
+INFO 2026-06-27 09:53:48,936 "POST /login/ HTTP/1.1" 302 0
+INFO 2026-06-27 09:53:55,655 "GET / HTTP/1.1" 200 30395
+INFO 2026-06-27 09:53:55,703 "GET /static/css/style-responsive.css HTTP/1.1" 200 13635
+INFO 2026-06-27 09:53:55,703 "GET /static/css/slidebars.css HTTP/1.1" 200 3860
+INFO 2026-06-27 09:53:55,705 "GET /static/css/style.css HTTP/1.1" 200 125253
+INFO 2026-06-27 09:53:55,708 "GET /static/assets/data-tables/DT_bootstrap.css HTTP/1.1" 200 3860
+INFO 2026-06-27 09:53:55,713 "GET /static/assets/select2/css/select2.min.css HTTP/1.1" 200 15197
+INFO 2026-06-27 09:53:55,737 "GET /static/js/jquery.dcjqaccordion.2.7.js HTTP/1.1" 200 6625
+INFO 2026-06-27 09:53:55,741 "GET /static/js/slidebars.min.js HTTP/1.1" 200 12930
+INFO 2026-06-27 09:53:55,744 "GET /static/js/common-scripts.js HTTP/1.1" 200 4853
+INFO 2026-06-27 09:53:55,746 "GET /static/js/respond.min.js HTTP/1.1" 200 4053
+INFO 2026-06-27 09:53:55,756 "GET /static/js/jquery.nicescroll.js HTTP/1.1" 200 64359
+INFO 2026-06-27 09:53:55,766 "GET /static/assets/data-tables/DT_bootstrap.js HTTP/1.1" 200 4327
+INFO 2026-06-27 09:53:55,773 "GET /static/js/jquery.scrollTo.min.js HTTP/1.1" 200 2441
+INFO 2026-06-27 09:53:55,783 "GET /static/js/jquery.js HTTP/1.1" 200 86929
+INFO 2026-06-27 09:53:55,802 "GET /static/assets/select2/js/select2.min.js HTTP/1.1" 200 66666
+INFO 2026-06-27 09:53:55,807 "GET /static/assets/data-tables/jquery.dataTables.js HTTP/1.1" 200 389605
+INFO 2026-06-27 09:53:55,875 "GET /static/img/search-icon.png HTTP/1.1" 200 1349
+ERROR 2026-06-27 09:54:09,359 Internal Server Error: /quotation-awaiting/
+Traceback (most recent call last):
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 964, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "F:\python\env\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 241, in __get__
+    rel_obj = self.field.get_cached_value(instance)
+  File "F:\python\env\Lib\site-packages\django\db\models\fields\mixins.py", line 21, in get_cached_value
+    return instance._state.fields_cache[self.cache_name]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'product'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "F:\python\env\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "F:\python\env\Lib\site-packages\MySQLdb\connections.py", line 286, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+MySQLdb.OperationalError: (1054, "Unknown column 'app_product.is_custom' in 'field list'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "F:\python\env\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "F:\python\env\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\env\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\views\generic\base.py", line 145, in dispatch
+    return handler(request, *args, **kwargs)
+  File "F:\python\env\Scripts\arrolite-1\app\view\quotation\quotation_view.py", line 35, in get
+    return render(request, self.template, context)
+  File "F:\python\env\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "F:\python\env\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\defaulttags.py", line 249, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 1150, in render
+    output = self.filter_expression.resolve(context)
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 788, in resolve
+    obj = self.var.resolve(context)
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 928, in resolve
+    value = self._resolve_lookup(context)
+  File "F:\python\env\Lib\site-packages\django\template\base.py", line 976, in _resolve_lookup
+    current = getattr(current, bit)
+  File "F:\python\env\Scripts\arrolite-1\app\models\product\quotation_model.py", line 86, in items_to_json
+    "items": [item.to_json for item in self.items.all()]
+              ^^^^^^^^^^^^
+  File "F:\python\env\Scripts\arrolite-1\app\models\product\quotation_model.py", line 138, in to_json
+    "product_name": self.product.name,
+                    ^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 257, in __get__
+    rel_obj = self.get_object(instance)
+  File "F:\python\env\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 222, in get_object
+    return qs.get(self.field.get_reverse_related_filter(instance))
+           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\models\query.py", line 635, in get
+    num = len(clone)
+  File "F:\python\env\Lib\site-packages\django\db\models\query.py", line 372, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "F:\python\env\Lib\site-packages\django\db\models\query.py", line 2000, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\models\query.py", line 95, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "F:\python\env\Lib\site-packages\django\db\models\sql\compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "F:\python\env\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "F:\python\env\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "F:\python\env\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "F:\python\env\Lib\site-packages\MySQLdb\connections.py", line 286, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: (1054, "Unknown column 'app_product.is_custom' in 'field list'")
+ERROR 2026-06-27 09:54:09,366 "GET /quotation-awaiting/ HTTP/1.1" 500 317232
+WARNING 2026-06-27 09:54:09,470 "GET /favicon.ico HTTP/1.1" 404 19911
+INFO 2026-06-27 09:55:44,632 Watching for file changes with StatReloader
+INFO 2026-06-27 09:56:09,851 "GET /quotation-awaiting/ HTTP/1.1" 200 40233
+INFO 2026-06-27 09:56:11,576 "GET /static/assets/data-tables/images/sort_both.png HTTP/1.1" 200 1136
+INFO 2026-06-27 10:08:53,097 "GET /invoice-request/ HTTP/1.1" 200 82777
+INFO 2026-06-27 10:08:53,603 "GET /static/assets/advanced-datatable/media/css/demo_page.css HTTP/1.1" 200 1887
+INFO 2026-06-27 10:08:53,605 "GET /static/assets/advanced-datatable/media/css/demo_table.css HTTP/1.1" 200 11353

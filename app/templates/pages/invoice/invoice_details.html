@@ -131,7 +131,6 @@
         <button id="edit-category-btn" data-bs-toggle="modal" data-bs-target="#pdf-config-create"class="btn btn-outline-danger btn-action" style="display: inline-flex;gap:2px;"><i class="material-icons">picture_as_pdf</i>PDF config</button>
 
         <a class="btn btn-outline-warning btn-action" href="{%url 'invoice_edit' quotation.id %}">  <i class="material-icons">edit</i>Edit</a>
-        <button class="btn btn-outline-danger btn-action" onclick="deleteInvoice('{% url 'invoice_delete' quotation.id %}')">  <i class="material-icons">delete</i>Delete</button>
 
         <button class="btn btn-outline-secondary btn-action"   onclick="history.back()">  <i class="material-icons">arrow_circle_left</i>Back</button>
     </div>
@@ -724,37 +723,5 @@ document.getElementById("pdf-config-save").addEventListener("click", async () =>
   }
 });
 
-function deleteInvoice(url) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "Do you want to delete this invoice?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it',
-        cancelButtonText: 'Cancel'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire('Deleted!', data.message, 'success');
-                    setTimeout(() => window.location.href = "{% url 'quotation_invoice' %}", 1000);
-                } else {
-                    Swal.fire('Error!', data.message || 'Failed to delete.', 'error');
-                }
-            })
-            .catch(err => {
-                Swal.fire('Error!', 'Something went wrong.', 'error');
-            });
-        }
-    });
-}
 </script>
 {% endblock %}

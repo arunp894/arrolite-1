@@ -49,7 +49,6 @@
                                     <th class="hidden-phone">Price</th>
                                     <th class="hidden-phone">Width</th>
                                     <th class="hidden-phone">Height</th>
-                                    <th class="hidden-phone">Custom</th>
                                     <th class="hidden-phone">Action</th>
                                 </tr>
                             </thead>
@@ -65,19 +64,11 @@
                                     <td>{{product.price}}</td>
                                     <td>{{product.width}}</td>
                                     <td>{{product.height}}</td>
-                                    <td class="hidden-phone">
-                                        {% if product.is_custom %}
-                                            <span class="badge bg-primary">Yes</span>
-                                        {% else %}
-                                            <span class="badge bg-secondary">No</span>
-                                        {% endif %}
-                                    </td>
                                     <td>
                                         <button id ="edit-product-btn" data-bs-toggle="modal" data-bs-target="#project-edit-model" class="btn btn-edi btn-sm edit-category-btn" data-id="{{product.id}}"
                                          data-name="{{product.name}}" data-categorie="{{product.category.id}}" data-subcategory="{{product.subcategory.id}}" 
                                          data-unit="{{product.unit.id}}"  data-description="{{product.description}}"  data-price="{{product.price}}" 
                                          data-width="{{product.width|default:'0.00'}}"  data-fixed_price ="{{product.fixed_price}}"
-                                         data-is_custom="{{product.is_custom}}"
                                          data-height="{{product.height|default:'0.00'}}"  ><i class="fa fa-pencil"></i></button>
                                          
                                          <button class="btn btn-del btn-sm" onclick="confirmDeletedUpdate('{% url 'product_delete' product.id%}')"><i class="fa fa-trash-o "></i></button>
@@ -158,15 +149,13 @@
                                             </div>
                                          <div class="form-group row ">
                                             <label for="description" class="control-label col-lg-2">Price</label>
-                                            <div class="col-lg-6"> 
+                                            <div class="col-lg-8"> 
                                                <input type="number" class="form-control" name="price" id="price" step="0.01" min="0" placeholder="0.00" />    
                                             </div>
                                             <div class="col-lg-2">
                                                 <label for="fixed_price" class="control-label text-danger">Fixed</label>
                                                 <input type="checkbox" name="fixed_price" id="fixed_price1"  placeholder="Fixed Price" />                                            </div>
-                                            <div class="col-lg-2">
-                                                <label for="is_custom" class="control-label text-primary">Custom</label>
-                                                <input type="checkbox" name="is_custom" id="is_custom1"  placeholder="Is Custom" />                                            </div>
+
                                          </div>
 
                                          </div>
@@ -256,15 +245,13 @@
                                             </div>
                                          <div class="form-group row ">
                                             <label for="description" class="control-label col-lg-2">Price</label>
-                                            <div class="col-lg-6"> 
+                                            <div class="col-lg-8"> 
                                                 <input type="text" class="form-control" name="price" id="price" />
                                             </div>
-                                            <div class="col-lg-2">
+                                              <div class="col-lg-2">
                                                 <label for="fixed_price" class="control-label text-danger">Fixed</label>
                                                 <input type="checkbox" name="fixed_price" id="fixed_price"  placeholder="Fixed Price" />                                            </div>
-                                            <div class="col-lg-2">
-                                                <label for="is_custom" class="control-label text-primary">Custom</label>
-                                                <input type="checkbox" name="is_custom" id="is_custom"  placeholder="Is Custom" />                                            </div>
+
                                          </div>
                                         </div>
                                         <div class="form-group row ">
@@ -296,27 +283,26 @@ $('#hidden-table-info').dataTable( { } );
 $(function () {
     const modal = $("#project-edit-model");
     const form = $("#project-edit-form");
-    // Populate modal form
-    $(".edit-category-btn").click(function () {
-         const btn = $(this);
-         const categoryId = btn.data("categorie");
-         const subcategoryId = btn.data("subcategory");
-         const unitId = btn.data("unit");
-         form.attr("data-id", btn.data("id"));
-         form.find("#name").val(btn.data("name"));
-         form.find("#width").val(btn.data("width")|| '');
-         form.find("#height").val(btn.data("height") || '');
-         form.find("#price").val(btn.data("price") || '');
-         const fixedPrice = btn.data("fixed_price"); // will be "True" or "False"
-         form.find("#fixed_price").prop("checked", String(fixedPrice).toLowerCase() === "true"); 
-         const isCustom = btn.data("is_custom"); // will be "True" or "False"
-         form.find("#is_custom").prop("checked", String(isCustom).toLowerCase() === "true"); 
-         form.find("#category").val(categoryId);
-         form.find("#subcategory").val(subcategoryId);
-         form.find("#unit").val(unitId);
-         form.find("#description").val(btn.data("description") || '');
- 
-    });
+        // Populate modal form
+        $(document).on("click", ".edit-category-btn", function () {
+            const btn = $(this);
+            // use attr() to read raw data-* attributes to avoid normalization issues
+            const categoryId = btn.attr("data-categorie") || '';
+            const subcategoryId = btn.attr("data-subcategory") || '';
+            const unitId = btn.attr("data-unit") || '';
+            form.attr("data-id", btn.attr("data-id") || '');
+            form.find("#name").val(btn.attr("data-name") || '');
+            form.find("#width").val(btn.attr("data-width") || '');
+            form.find("#height").val(btn.attr("data-height") || '');
+            form.find("#price").val(btn.attr("data-price") || '');
+            const fixedPrice = btn.attr("data-fixed_price"); // raw attribute (underscore kept)
+            form.find("#fixed_price").prop("checked", String(fixedPrice).toLowerCase() === "true"); 
+            form.find("#category").val(categoryId);
+            form.find("#subcategory").val(subcategoryId);
+            form.find("#unit").val(unitId);
+            form.find("#description").val(btn.attr("data-description") || '');
+
+        });
 
     // Submit updated form via AJAX
     $("#category-edit-submit").click(function () {

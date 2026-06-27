@@ -25,7 +25,6 @@ from app.view.invoices.invoice_view import (
     InvoiceRequestMarkPaidView,
     InvoiceRequestView,
     ProductReportInvoice,
-    InvoiceDelete,
 )
 from app.view.iso_series.iso_view import ISOSizeDelete, ISOSizeEditView, ISOSizeListView
 from app.view.permission.permission import (
@@ -137,7 +136,6 @@ urlpatterns = [
     path("invoice-list/", InvoiceListView.as_view(), name="quotation_invoice"),
     path("invoice-request/", InvoiceRequestView.as_view(), name="invoice_request"),
     path("invoice/<int:pk>/edit/", InvoiceEditView.as_view(), name="invoice_edit"), 
-    path("invoice-delete/<int:pk>/", InvoiceDelete.as_view(), name="invoice_delete"), 
     path(
         "invoice-paid/",
         InvoiceRequestMarkPaidView.as_view(),
